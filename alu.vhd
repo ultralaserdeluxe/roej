@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
-entity alu is   
+entity alu is                           --derp
    port (
      input : in std_logic_vector(15 downto 0);        -- input from buss
      ar_in: in std_logic_vector(15 downto 0);           -- input from ar
@@ -20,6 +20,6 @@ begin
     (ar_in - 1) when "00100",                 --bit 2    decrement ar
     (ar_in + input) when "01000",             --bit 3    add
     (ar_in - input) when "10000",             --bit 4    sub
-    "1010101010101010" when others;
+    "1010101010101010" when others;   --COMMITTA SKITEN
   
 end alu_ar;
