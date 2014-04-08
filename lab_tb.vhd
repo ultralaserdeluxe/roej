@@ -14,14 +14,14 @@ ARCHITECTURE behavior OF lab_tb IS
     generic(n : integer := 8);
     PORT(
       clk,reset, enable : IN std_logic;
-      value : out std_logic_vector(31 - 1 downto 0)
+      value : out std_logic_vector(8 - 1 downto 0)
       );
   END COMPONENT;
 
   SIGNAL clk : std_logic := '0';
   SIGNAL rst : std_logic := '0';
   signal enable : std_logic := '1';
-  signal value_out : std_logic_vector(31 - 1 downto 0);
+  signal value_out : std_logic_vector(8 - 1 downto 0);
   signal tb_running : boolean := true;
   
 BEGIN
