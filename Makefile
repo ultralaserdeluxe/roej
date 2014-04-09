@@ -33,7 +33,7 @@ XILINX_INIT = source /sw/xilinx/ise_12.4i/ISE_DS/settings32.sh;
 PART=xc6slx16-3-csg324
 
 
-proj.%: S=counter.vhd alu.vhd
+proj.%: S=counter.vhd alu.vhd gpu.vhd
 proj.%: T=counter_tb.vhd
 proj.%: U=Nexys3_Master.ucf
 

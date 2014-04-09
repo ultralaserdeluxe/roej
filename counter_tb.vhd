@@ -11,15 +11,14 @@ ARCHITECTURE behavior OF counter_tb IS
 
   -- Component Declaration
   COMPONENT counter
-    generic(n : integer := 8);
+    generic(n : integer);
     PORT(
       clk,reset, enable : IN std_logic;
-      value : out std_logic_vector(7 downto 0)
-      );
+      value : out std_logic_vector(7 downto 0));
   END COMPONENT;
 
-  SIGNAL clk : std_logic := '0';
-  SIGNAL rst : std_logic := '0';
+  signal clk : std_logic := '0';
+  signal rst : std_logic := '0';
   signal enable : std_logic := '0';
   signal value_out : std_logic_vector(7 downto 0);
   signal tb_running : boolean := true;
@@ -27,12 +26,14 @@ ARCHITECTURE behavior OF counter_tb IS
 BEGIN
 
   -- Component Instantiation
-  uut: counter PORT MAP(
-    clk => clk,
-    reset => rst,
-    enable => enable,
-    value => value_out
-    );
+  uut: counter
+    generic map (
+      n => 8)
+    PORT MAP(
+      clk => clk,
+      reset => rst,
+      enable => enable,
+      value => value_out);
 
 
   clk_gen : process
