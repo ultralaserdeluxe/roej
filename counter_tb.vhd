@@ -55,16 +55,26 @@ BEGIN
     rst <= '1';
     enable <= '0';
     
-    wait for 500 ns;
+    wait for 100 ns;
     wait until rising_edge(clk);        -- se till att reset släpps synkront
     rst <= '0';                         -- med klockan
     report "Reset released" severity note;
 
-    wait for 500 ns;
+    wait for 100 ns;
     wait until rising_edge(clk);
     enable <= '1';
     report "Enable high" severity note;
 
+    wait for 100 ns;
+    wait until rising_edge(clk);
+    enable <= '0';
+    report "Enable low" severity note;
+    
+    wait for 100 ns;
+    wait until rising_edge(clk);
+    enable <= '1';
+    report "Enable high" severity note;
+    
     for i in 0 to 50000000 loop         -- Vänta ett antal klockcykler
       wait until rising_edge(clk);
     end loop;  -- i
