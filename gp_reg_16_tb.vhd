@@ -4,11 +4,11 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 
-ENTITY gp_reg_tb IS
-END gp_reg_tb;
+ENTITY gp_reg_16_tb IS
+END gp_reg_16_tb;
 
-architecture gp_reg_tb_ar of gp_reg_tb is
-  component gp_reg
+architecture gp_reg_16_tb_ar of gp_reg_16_tb is
+  component gp_reg_16
     port ( clk,rst,load : in std_logic;
            tal_in : STD_LOGIC_VECTOR(15 downto 0);
            tal_ut : out  STD_LOGIC_VECTOR(15 downto 0));
@@ -21,9 +21,9 @@ architecture gp_reg_tb_ar of gp_reg_tb is
   signal tal_ut : std_logic_vector(15 downto 0);
   signal tb_running : boolean := true;
   
-begin  -- gp_reg_tb_ar
+begin  -- gp_reg_16_tb_ar
 
-  uut : gp_reg port map (
+  uut : gp_reg_16 port map (
     clk => clk,
     rst => rst,
     load => load,
@@ -83,4 +83,4 @@ stimuli_generator : process
     wait;
   end process;
 
-end gp_reg_tb_ar;
+end gp_reg_16_tb_ar;

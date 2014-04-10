@@ -3,14 +3,14 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
-entity gp_reg is
-    Port ( clk,rst,load : in  STD_LOGIC;
-           tal_in : in STD_LOGIC_VECTOR(15 downto 0);
-           tal_ut : out  STD_LOGIC_VECTOR(15 downto 0));
-end gp_reg;
-architecture gp_reg_ar of gp_reg is
+entity gp_reg_16 is
+  Port ( clk,rst,load : in  STD_LOGIC;
+         tal_in : in STD_LOGIC_VECTOR(15 downto 0);
+         tal_ut : out  STD_LOGIC_VECTOR(15 downto 0));
+end gp_reg_16;
+architecture gp_reg_16_ar of gp_reg_16 is
 
-begin  -- gp_reg_ar
+begin  -- gp_reg_16_ar
   process(clk)
   begin
     if rising_edge(clk) then
@@ -21,4 +21,4 @@ begin  -- gp_reg_ar
       end if;
     end if;
   end process;
-end gp_reg_ar;
+end gp_reg_16_ar;
