@@ -37,6 +37,11 @@ proj.%: S=counter.vhd alu.vhd gpu.vhd
 proj.%: T=counter_tb.vhd
 proj.%: U=Nexys3_Master.ucf
 
+hej.%: S=alu.vhd constant.vhd
+hej.%: T=alu_tb.vhd
+hej.%: U=Nexys3_Master.ucf
+
+
 
 # Det här är ett exempel på hur man kan skriva en testbänk som är
 # relevant, även om man kör en simulering i batchläge (make batchlab.simc)
