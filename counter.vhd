@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
 entity counter is
+  
   generic (
     n : integer);
   port(
@@ -10,11 +11,15 @@ entity counter is
     reset : in std_logic;
     enable : in std_logic;
     value : out std_logic_vector(n - 1 downto 0));
+  
 end counter;
     
 architecture counter_ar of counter is
+  
   signal count : std_logic_vector(n - 1 downto 0);
+  
 begin  -- counter_ar
+  
   process(clk) is
   begin
     if rising_edge(clk) then
@@ -27,4 +32,5 @@ begin  -- counter_ar
   end process;
   
   value <= count;
+  
 end counter_ar;
