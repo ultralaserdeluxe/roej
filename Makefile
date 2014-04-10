@@ -33,14 +33,17 @@ XILINX_INIT = source /sw/xilinx/ise_12.4i/ISE_DS/settings32.sh;
 PART=xc6slx16-3-csg324
 
 
-proj.%: S=counter.vhd alu.vhd gpu.vhd
-proj.%: T=counter_tb.vhd
-proj.%: U=Nexys3_Master.ucf
+counter.%: S=counter.vhd
+counter.%: T=counter_tb.vhd
+counter.%: U=Nexys3_Master.ucf
 
 hej.%: S=alu.vhd constant.vhd
 hej.%: T=alu_tb.vhd
 hej.%: U=Nexys3_Master.ucf
 
+gpu.%: S=gpu.vhd
+gpu.%: T=gpu_tb.vhd
+gpu.%: U=Nexys3_Master.ucf
 
 
 # Det här är ett exempel på hur man kan skriva en testbänk som är
