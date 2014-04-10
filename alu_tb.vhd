@@ -1,6 +1,7 @@
 -- TestBench Template 
 
 LIBRARY ieee;
+use work.constants.all;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 
@@ -12,17 +13,17 @@ ARCHITECTURE behavior OF alu_tb IS
   -- Component Declaration
   COMPONENT alu
     PORT(
-      input : in std_logic_vector(15 downto 0);   
-      ar_in : in std_logic_vector(15 downto 0);           
-      ar_out : out std_logic_vector(15 downto 0);     
+      input : in std_logic_vector(buswidth-1 downto 0);   
+      ar_in : in std_logic_vector(buswidth-1 downto 0);           
+      ar_out : out std_logic_vector(buswidth-1 downto 0);     
       alu_logic : in std_logic_vector(4 downto 0));
   END COMPONENT;
   signal clk : std_logic := '0';
   signal rst : std_logic := '0';
-  signal ar_in_signal : std_logic_vector(15 downto 0);
+  signal ar_in_signal : std_logic_vector(buswidth-1 downto 0);
   signal alu_logic_signal : std_logic_vector(4  downto 0);
-  signal value_in : std_logic_vector(15 downto 0);
-  signal value_out : std_logic_vector(15  downto 0);
+  signal value_in : std_logic_vector(buswidth-1 downto 0);
+  signal value_out : std_logic_vector(buswidth-1  downto 0);
   signal tb_running : boolean := true;
   
 BEGIN
@@ -61,12 +62,15 @@ BEGIN
     rst <= '0';
     report "Reset released" severity note;
 
-    value_in <= "0000000000000111";
+    value_in <= "00000111";
     wait for 100 ns;
 
     alu_logic_signal <= "01000";
+    ar_in_signal <= "01010000";
     wait for 100 ns;
 
+    
+    value_in <= "01000000";
     alu_logic_signal <= "10000";
     wait for 100 ns;
 
@@ -75,6 +79,8 @@ BEGIN
 
     alu_logic_signal <= "00100";
     wait for 100 ns;
+
+    
     
     for i in 0 to 50000000 loop         -- Vänta ett antal klockcykler
       wait until rising_edge(clk);

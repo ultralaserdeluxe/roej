@@ -1,5 +1,5 @@
 package constants is
 
-  constant bus_width : integer := 8;
+  constant buswidth : integer := 8;
 
 end constants;
