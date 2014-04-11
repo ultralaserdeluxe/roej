@@ -25,11 +25,13 @@ architecture gpu_behv of gpu is
   signal pixel_counter_value : std_logic_vector(1 downto 0);
   signal pixel_clk : std_logic;
   
-  signal x_value : std_logic_vector(7 downto 0) := "00000000";
+  signal x_value : std_logic_vector(9 downto 0) := "0000000000";
+  constant x_max : std_logic_vector(9 downto 0) := "1100011111";  -- 799
   signal x_reset : std_logic;
   signal x_enable : std_logic;
   
-  signal y_value : std_logic_vector(7 downto 0) := "00000000";
+  signal y_value : std_logic_vector(9 downto 0) := "0000000000";
+  constant y_max : std_logic_vector(9 downto 0) := "1000001000";  -- 520
   signal y_reset : std_logic;
   signal y_enable : std_logic;
   
@@ -54,14 +56,14 @@ begin
   
   x_counter : counter
     generic map (
-      n => 8)
+      n => 10)
     port map (
       clk    => pixel_clk,
       reset  => x_reset,
       enable => x_enable,
       value  => x_value);
 
-  x_reset <= '1' when x_value = "11" or reset = '1' else
+  x_reset <= '1' when x_value = x_max or reset = '1' else
              '0';
   x_enable <= '1';
 
@@ -70,14 +72,15 @@ begin
   
   y_counter : counter
     generic map (
-      n => 8)
+      n => 10)
     port map (
       clk    => pixel_clk,
       reset  => y_reset,
       enable => y_enable,
       value  => y_value);
 
-  y_reset <= '1' when y_value = "11" and x_value = "11" or reset = '1' else
+  y_reset <= '1' when y_value = y_max and x_value = x_max else
+             '1' when reset = '1' else
              '0';
   y_enable <= '1' when x_reset = '1' else
               '0';
