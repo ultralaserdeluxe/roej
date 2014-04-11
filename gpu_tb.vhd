@@ -28,9 +28,9 @@ begin  -- gpu_tb_behv
   begin
     while tb_running loop
       clk <= '0';
-      wait for 20 ns;
+      wait for 5 ns;
       clk <= '1';
-      wait for 20 ns;
+      wait for 5 ns;
     end loop;
     wait;
   end process;
