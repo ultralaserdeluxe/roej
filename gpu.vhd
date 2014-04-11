@@ -22,18 +22,39 @@ architecture gpu_behv of gpu is
       value  : out std_logic_vector(n - 1 downto 0));
   end component;
 
+  -- Clock divider.
+  
   signal pixel_counter_value : std_logic_vector(1 downto 0);
   signal pixel_clk : std_logic;
+
+
+  -- Pixel x-counter.
   
   signal x_value : std_logic_vector(9 downto 0) := "0000000000";
   constant x_max : std_logic_vector(9 downto 0) := "1100011111";  -- 799
   signal x_reset : std_logic;
   signal x_enable : std_logic;
+
+
+  -- Pixel y-counter.
   
   signal y_value : std_logic_vector(9 downto 0) := "0000000000";
   constant y_max : std_logic_vector(9 downto 0) := "1000001000";  -- 520
   signal y_reset : std_logic;
   signal y_enable : std_logic;
+
+
+  -- Sync-generator.
+
+  signal h_sync : std_logic := '0';
+  constant h_sync_fp : std_logic_vector(9 downto 0) := "1010000000";  -- 640
+  constant h_sync_pw : std_logic_vector(9 downto 0) := "1010010000";  -- 656
+  constant h_sync_bp : std_logic_vector(9 downto 0) := "1011110000";  -- 752
+  signal v_sync : std_logic := '0';
+  constant v_sync_fp : std_logic_vector(9 downto 0) := "0111100000";  -- 480
+  constant v_sync_pw : std_logic_vector(9 downto 0) := "0111101010";  -- 490
+  constant v_sync_bp : std_logic_vector(9 downto 0) := "0111101100";  -- 492
+  signal display_valid : std_logic := '0';
   
 begin
 
@@ -84,5 +105,16 @@ begin
              '0';
   y_enable <= '1' when x_reset = '1' else
               '0';
-      
+
+
+  -- Sync-generator.
+  h_sync <= '1' when x_value >= h_sync_pw and x_value < h_sync_bp else
+            '0';
+  v_sync <= '1' when y_value >= v_sync_pw and y_value < v_sync_bp else
+            '0';
+  display_valid <= '1' when x_value < h_sync_fp and y_value < v_sync_fp else
+                   '0';
+                                                                     
+                                                                     
+  
 end gpu_behv;
