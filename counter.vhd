@@ -17,13 +17,17 @@ end counter;
 architecture counter_ar of counter is
   
   signal count : std_logic_vector(n - 1 downto 0);
+  signal init : std_logic := '0';
   
 begin  -- counter_ar
   
   process(clk) is
   begin
     if rising_edge(clk) then
-      if reset = '1' then
+      if init = '0' then
+        count <= (count'range => '0');
+        init <= '1';
+      elsif reset = '1' then
         count <= (count'range => '0');
       elsif enable = '1' then
         count <= count + 1;  
