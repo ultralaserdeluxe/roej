@@ -37,7 +37,7 @@ begin  -- gpu_tb_behv
 
   stimuli_gen : process
   begin
-    reset <= '1';
+    reset <= '0';
 
     wait for 100 ns;
     wait until rising_edge(clk);

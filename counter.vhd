@@ -4,19 +4,21 @@ use ieee.std_logic_unsigned.all;
 
 entity counter is
   
-  generic (
-    n : integer);
+--  generic (
+--  n : integer);
   port(
     clk : in std_logic;
     reset : in std_logic;
     enable : in std_logic;
-    value : out std_logic_vector(n - 1 downto 0));
+--    value : out std_logic_vector(n - 1 downto 0));
+    value : out std_logic_vector(10 - 1 downto 0));
   
 end counter;
     
 architecture counter_ar of counter is
   
-  signal count : std_logic_vector(n - 1 downto 0);
+--  signal count : std_logic_vector(n - 1 downto 0);
+  signal count : std_logic_vector(10 - 1 downto 0);  
   signal init : std_logic := '0';
   
 begin  -- counter_ar

@@ -6,25 +6,32 @@ entity gpu is
 
   port(
     clk : in std_logic;
-    reset : in std_logic);
+    reset : in std_logic;
+    vgaRed : out std_logic_vector(2 downto 0);
+    vgaGreen : out std_logic_vector(2 downto 0);
+    vgaBlue : out std_logic_vector(2 downto 1);
+    Hsync : out std_logic;
+    Vsync : out std_logic);
   
 end gpu;
     
 architecture gpu_behv of gpu is
 
   component counter
-    generic (
-      n : integer);
+--    generic (
+--      n : integer);
     port (
       clk : in std_logic;
       reset : in  std_logic;
       enable : in  std_logic;
-      value  : out std_logic_vector(n - 1 downto 0));
+--      value  : out std_logic_vector(n - 1 downto 0));
+      value  : out std_logic_vector(10 - 1 downto 0));      
   end component;
 
   -- Clock divider.
   
-  signal pixel_counter_value : std_logic_vector(1 downto 0);
+--  signal pixel_counter_value : std_logic_vector(1 downto 0);
+  signal pixel_counter_value : std_logic_vector(10 - 1 downto 0);  
   signal pixel_clk : std_logic;
 
 
@@ -62,8 +69,8 @@ begin
   -- pixel_clk = clk / 4 (100MHz => 25 MHz)
   
   pixel_counter : counter
-    generic map (
-      n => 2)
+--    generic map (
+--      n => 2)
     port map (
       clk    => clk,
       reset  => reset,
@@ -76,8 +83,8 @@ begin
   -- Pixel x-counter.
   
   x_counter : counter
-    generic map (
-      n => 10)
+--    generic map (
+--      n => 10)
     port map (
       clk    => pixel_clk,
       reset  => x_reset,
@@ -92,8 +99,8 @@ begin
   -- Pixel y-counter.
   
   y_counter : counter
-    generic map (
-      n => 10)
+--    generic map (
+--      n => 10)
     port map (
       clk    => pixel_clk,
       reset  => y_reset,
@@ -114,7 +121,14 @@ begin
             '0';
   display_valid <= '1' when x_value < h_sync_fp and y_value < v_sync_fp else
                    '0';
-                                                                     
-                                                                     
+
+  
+  -- Connect VGA-port pins.
+  vgaRed <= x_value(5 downto 3) when display_valid = '1' else "000";
+  vgaGreen <= x_value(9 downto 7) when display_valid = '1' else "000";
+  vgaBlue <= y_value(5 downto 4) when display_valid = '1' else "00";
+  Hsync <= h_sync;
+  Vsync <= v_sync;
+         
   
 end gpu_behv;
