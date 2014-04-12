@@ -18,20 +18,18 @@ end gpu;
 architecture gpu_behv of gpu is
 
   component counter
---    generic (
---      n : integer);
+    generic (
+      n : integer);
     port (
       clk : in std_logic;
       reset : in  std_logic;
       enable : in  std_logic;
---      value  : out std_logic_vector(n - 1 downto 0));
-      value  : out std_logic_vector(10 - 1 downto 0));      
+      value  : out std_logic_vector(n - 1 downto 0));
   end component;
 
   -- Clock divider.
   
---  signal pixel_counter_value : std_logic_vector(1 downto 0);
-  signal pixel_counter_value : std_logic_vector(10 - 1 downto 0);  
+  signal pixel_counter_value : std_logic_vector(1 downto 0);
   signal pixel_clk : std_logic;
 
 
@@ -69,8 +67,8 @@ begin
   -- pixel_clk = clk / 4 (100MHz => 25 MHz)
   
   pixel_counter : counter
---    generic map (
---      n => 2)
+    generic map (
+      n => 2)
     port map (
       clk    => clk,
       reset  => reset,
@@ -83,8 +81,8 @@ begin
   -- Pixel x-counter.
   
   x_counter : counter
---    generic map (
---      n => 10)
+    generic map (
+      n => 10)
     port map (
       clk    => pixel_clk,
       reset  => x_reset,
@@ -99,8 +97,8 @@ begin
   -- Pixel y-counter.
   
   y_counter : counter
---    generic map (
---      n => 10)
+    generic map (
+      n => 10)
     port map (
       clk    => pixel_clk,
       reset  => y_reset,
