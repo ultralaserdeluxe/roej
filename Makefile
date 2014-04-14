@@ -37,8 +37,8 @@ counter.%: S=counter.vhd
 counter.%: T=counter_tb.vhd
 counter.%: U=Nexys3_Master.ucf
 
-alu.%: S=alu.vhd constant.vhd
-alu.%: T=alu_tb.vhd
+alu.%: S=alu.vhd gp_reg_8.vhd constant.vhd
+alu.%: T=cpu_tb.vhd
 alu.%: U=Nexys3_Master.ucf
 
 gpu.%: S=gpu.vhd counter.vhd mapmem.vhd
