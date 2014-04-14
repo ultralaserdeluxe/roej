@@ -11,7 +11,12 @@ entity gpu is
     vgaGreen : out std_logic_vector(2 downto 0);
     vgaBlue : out std_logic_vector(2 downto 1);
     Hsync : out std_logic;
-    Vsync : out std_logic);
+    Vsync : out std_logic;
+    addr_col : in std_logic_vector(7 downto 0);
+    addr_row : in std_logic_vector(7 downto 0);
+    data_in : in std_logic_vector(7 downto 0);
+    data_out : out std_logic_vector(7 downto 0);
+    write_enable : in std_logic);
   
 end gpu;
     
@@ -33,7 +38,7 @@ architecture gpu_behv of gpu is
   signal pixel_clk : std_logic;
 
 
-  -- Pixel x-counter.
+-- Pixel x-counter.
   
   signal x_value : std_logic_vector(9 downto 0) := "0000000000";
   constant x_max : std_logic_vector(9 downto 0) := "1100011111";  -- 799
@@ -60,6 +65,24 @@ architecture gpu_behv of gpu is
   constant v_sync_pw : std_logic_vector(9 downto 0) := "0111101010";  -- 490
   constant v_sync_bp : std_logic_vector(9 downto 0) := "0111101100";  -- 492
   signal display_valid : std_logic := '0';
+
+
+  -- Tile memory.
+
+  component mapmem
+    port(
+      clk : in std_logic;
+      addr_a_row : in std_logic_vector(5 downto 0);
+      addr_a_col : in std_logic_vector(5 downto 0);
+      data_a_out : out std_logic_vector(7 downto 0);
+      addr_b_row : in std_logic_vector(5 downto 0);
+      addr_b_col : in std_logic_vector(5 downto 0);
+      data_b_in : in std_logic_vector(7 downto 0);
+      data_b_out : out std_logic_vector(7 downto 0);    
+      write_enable : in std_logic);
+  end component;
+
+  signal mapmem_data_a_out : std_logic_vector(7 downto 0);  
   
 begin
 
@@ -113,6 +136,7 @@ begin
 
 
   -- Sync-generator.
+  
   h_sync <= '1' when x_value >= h_sync_pw and x_value < h_sync_bp else
             '0';
   v_sync <= '1' when y_value >= v_sync_pw and y_value < v_sync_bp else
@@ -122,11 +146,26 @@ begin
 
   
   -- Connect VGA-port pins.
+  
   vgaRed <= x_value(5 downto 3) when display_valid = '1' else "000";
   vgaGreen <= x_value(9 downto 7) when display_valid = '1' else "000";
   vgaBlue <= y_value(5 downto 4) when display_valid = '1' else "00";
   Hsync <= h_sync;
   Vsync <= v_sync;
          
-  
+
+  -- Tile memory.
+
+  map_memory : mapmem
+    port map (
+      clk => clk,
+      addr_a_row  => y_value(9 downto 4),
+      addr_a_col  => x_value(9 downto 4),
+      data_a_out  => mapmem_data_a_out,
+      addr_b_row  => addr_col(5 downto 0),
+      addr_b_col  => addr_row(5 downto 0),
+      data_b_in => data_in,
+      data_b_out => data_out,
+      write_enable => write_enable);
+
 end gpu_behv;
