@@ -15,7 +15,7 @@ begin  -- gp_reg_8_ar
   begin
     if rising_edge(clk) then
       if rst = '1' then
-        tal_ut <= "0000000000000000";
+        tal_ut <= "00000000";
       elsif load = '1' then
         tal_ut <= tal_in;
       end if;
