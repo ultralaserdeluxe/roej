@@ -8,31 +8,21 @@ entity mapmem is
     clk : in std_logic;
     addr_a_row : in std_logic_vector(5 downto 0);
     addr_a_col : in std_logic_vector(5 downto 0);
-    data_a_out : out std_logic_vector(5 downto 0);    
-    addr_b_row : in std_logic_vector(5 downto 0);
-    addr_b_col : in std_logic_vector(5 downto 0);
-    data_b_in : in std_logic_vector(5 downto 0);
-    data_b_out : out std_logic_vector(5 downto 0);    
-    write_enable : in std_logic);
+    data_a_out : out std_logic_vector(5 downto 0));    
   
 end mapmem;
     
 architecture mapmem_behv of mapmem is
 
-  type mapmem_t is array (0 to 63, 0 to 63) of std_logic_vector(5 downto 0);
-  signal mapmem : mapmem_t := (others => (others => "000000"));
+  type mapmem_t is array (0 to 4096) of std_logic_vector(5 downto 0);
+  signal mapmem : mapmem_t := (others => "000000");
 
 begin
 
-  data_a_out <= mapmem(conv_integer(addr_a_row), conv_integer(addr_a_col));
-  data_b_out <= mapmem(conv_integer(addr_b_row), conv_integer(addr_b_col));
   process(clk)
   begin
     if rising_edge(clk) then
-      if write_enable = '1' then
-        mapmem(conv_integer(addr_b_row), conv_integer(addr_b_col)) <=
-          data_b_in;
-      end if;
+      data_a_out <= mapmem(conv_integer(addr_a_row) * 4 + conv_integer(addr_a_col));
     end if;
   end process;
   

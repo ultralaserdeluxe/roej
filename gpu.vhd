@@ -11,13 +11,7 @@ entity gpu is
     vgaGreen : out std_logic_vector(2 downto 0);
     vgaBlue : out std_logic_vector(2 downto 1);
     Hsync : out std_logic;
-    Vsync : out std_logic;
-    addr_col : in std_logic_vector(7 downto 0);
-    addr_row : in std_logic_vector(7 downto 0);
-    data_in : in std_logic_vector(7 downto 0);
-    data_out : out std_logic_vector(7 downto 0);
-    write_enable : in std_logic
-    );
+    Vsync : out std_logic);
   
 end gpu;
     
@@ -75,12 +69,7 @@ architecture gpu_behv of gpu is
       clk : in std_logic;
       addr_a_row : in std_logic_vector(5 downto 0);
       addr_a_col : in std_logic_vector(5 downto 0);
-      data_a_out : out std_logic_vector(5 downto 0);
-      addr_b_row : in std_logic_vector(5 downto 0);
-      addr_b_col : in std_logic_vector(5 downto 0);
-      data_b_in : in std_logic_vector(5 downto 0);
-      data_b_out : out std_logic_vector(5 downto 0);    
-      write_enable : in std_logic);
+      data_a_out : out std_logic_vector(5 downto 0));
   end component;
 
   signal mapmem_data_a_out : std_logic_vector(5 downto 0);
@@ -102,14 +91,6 @@ architecture gpu_behv of gpu is
   signal tilemem_row : std_logic_vector(2 downto 0);
   signal tilemem_x : std_logic_vector(3 downto 0);
   signal tilemem_y : std_logic_vector(3 downto 0);
-
-
-  -- Stuff for testing synthesis.
-
-  --signal addr_col : std_logic_vector(7 downto 0) := "00000000";
-  --signal addr_row : std_logic_vector(7 downto 0) := "00000000";
-  --signal data_in : std_logic_vector(7 downto 0) := "00000000";
-  --signal write_enable : std_logic := '0';
   
 begin
 
@@ -181,15 +162,8 @@ begin
       clk => clk,
       addr_a_row  => y_value(9 downto 4),
       addr_a_col  => x_value(9 downto 4),
-      data_a_out  => mapmem_data_a_out,
-      addr_b_row  => addr_col(5 downto 0),
-      addr_b_col  => addr_row(5 downto 0),
-      data_b_in => data_in(5 downto 0),
-      data_b_out => data_out(5 downto 0),
-      write_enable => write_enable);
-  
-  data_out(7 downto 6) <= "00";
-  
+      data_a_out  => mapmem_data_a_out);
+
   
   -- Tile memory.
   
