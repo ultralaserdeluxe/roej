@@ -41,10 +41,9 @@ alu.%: S=alu.vhd constant.vhd
 alu.%: T=alu_tb.vhd
 alu.%: U=Nexys3_Master.ucf
 
-gpu.%: S=gpu.vhd counter.vhd mapmem.vhd tilemem.vhd
+gpu.%: S=gpu.vhd sprite.vhd counter.vhd mapmem.vhd tilemem.vhd
 gpu.%: T=gpu_tb.vhd
 gpu.%: U=Nexys3_Master.ucf
-
 
 # Det här är ett exempel på hur man kan skriva en testbänk som är
 # relevant, även om man kör en simulering i batchläge (make batchlab.simc)

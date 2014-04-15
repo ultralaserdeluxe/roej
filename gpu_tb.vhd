@@ -10,7 +10,7 @@ architecture gpu_tb_behv of gpu_tb is
   component gpu
   port(
     clk : in std_logic;
-    reset : in std_logic;
+    rst : in std_logic;
     vgaRed : out std_logic_vector(2 downto 0);
     vgaGreen : out std_logic_vector(2 downto 0);
     vgaBlue : out std_logic_vector(2 downto 1);
@@ -19,7 +19,7 @@ architecture gpu_tb_behv of gpu_tb is
   end component;
 
   signal clk : std_logic := '0';
-  signal reset : std_logic := '0';
+  signal rst : std_logic := '0';
   signal tb_running : boolean := true;
   
 begin  -- gpu_tb_behv
@@ -27,7 +27,7 @@ begin  -- gpu_tb_behv
   gpu_out : gpu
     port map (
       clk => clk,
-      reset => reset);
+      rst => rst);
 
   clk_gen : process
   begin
@@ -42,11 +42,11 @@ begin  -- gpu_tb_behv
 
   stimuli_gen : process
   begin
-    reset <= '0';
+    rst <= '0';
 
     wait for 100 ns;
     wait until rising_edge(clk);
-    reset <= '0';
+    rst <= '0';
   
     for i in 0 to 50000000 loop         -- Vänta ett antal klockcykler
       wait until rising_edge(clk);

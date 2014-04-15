@@ -91,6 +91,22 @@ architecture gpu_behv of gpu is
   signal tilemem_row : std_logic_vector(2 downto 0);
   signal tilemem_x : std_logic_vector(3 downto 0);
   signal tilemem_y : std_logic_vector(3 downto 0);
+
+
+  -- Sprite unit.
+
+  component sprite
+    port(
+      clk : in std_logic;
+      pixel_clk : in std_logic;
+      rst : in std_logic;
+      pixel_x_pos : in std_logic_vector(9 downto 0);
+      pixel_y_pos : in std_logic_vector(9 downto 0);
+      rgb_in : in std_logic_vector(7 downto 0);
+      rgb_out : out std_logic_vector(7 downto 0));
+  end component;
+
+  signal sprite_rgb_out : std_logic_vector(7 downto 0);
   
 begin
 
@@ -181,10 +197,23 @@ begin
   tilemem_y <= y_value(3 downto 0);  
 
 
-  -- Connect VGA-port pins.
+  -- Sprite unit.
+
+  sprite_unit : sprite
+    port map (
+      clk    => clk,
+      pixel_clk => pixel_clk,
+      rst  => rst,
+      pixel_x_pos => x_value,
+      pixel_y_pos => y_value,
+      rgb_in => tilemem_data_out,
+      rgb_out => sprite_rgb_out);      
+
+
+-- Connect VGA-port pins.
   
-  vgaRed <= tilemem_data_out(7 downto 5) when display_valid = '1' else "000";
-  vgaGreen <= tilemem_data_out(4 downto 2) when display_valid = '1' else "000";
-  vgaBlue <= tilemem_data_out(1 downto 0) when display_valid = '1' else "00";         
+  vgaRed <= sprite_rgb_out(7 downto 5) when display_valid = '1' else "000";
+  vgaGreen <= sprite_rgb_out(4 downto 2) when display_valid = '1' else "000";
+  vgaBlue <= sprite_rgb_out(1 downto 0) when display_valid = '1' else "00";
   
 end gpu_behv;
