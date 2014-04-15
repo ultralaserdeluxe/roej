@@ -16,7 +16,8 @@ entity gpu is
     addr_row : in std_logic_vector(7 downto 0);
     data_in : in std_logic_vector(7 downto 0);
     data_out : out std_logic_vector(7 downto 0);
-    write_enable : in std_logic);
+    write_enable : in std_logic
+    );
   
 end gpu;
     
@@ -67,22 +68,48 @@ architecture gpu_behv of gpu is
   signal display_valid : std_logic := '0';
 
 
-  -- Tile memory.
+  -- Map memory.
 
   component mapmem
     port(
       clk : in std_logic;
       addr_a_row : in std_logic_vector(5 downto 0);
       addr_a_col : in std_logic_vector(5 downto 0);
-      data_a_out : out std_logic_vector(7 downto 0);
+      data_a_out : out std_logic_vector(5 downto 0);
       addr_b_row : in std_logic_vector(5 downto 0);
       addr_b_col : in std_logic_vector(5 downto 0);
-      data_b_in : in std_logic_vector(7 downto 0);
-      data_b_out : out std_logic_vector(7 downto 0);    
+      data_b_in : in std_logic_vector(5 downto 0);
+      data_b_out : out std_logic_vector(5 downto 0);    
       write_enable : in std_logic);
   end component;
 
-  signal mapmem_data_a_out : std_logic_vector(7 downto 0);  
+  signal mapmem_data_a_out : std_logic_vector(5 downto 0);
+
+
+  -- Tile memory.
+
+  component tilemem
+      port(
+        row_base : in std_logic_vector(2 downto 0);
+        row_offset : in std_logic_vector(3 downto 0);
+        col_base : in std_logic_vector(2 downto 0);
+        col_offset : in std_logic_vector(3 downto 0);
+        data_out : out std_logic_vector(7 downto 0));
+  end component;
+  
+  signal tilemem_data_out : std_logic_vector(7 downto 0);
+  signal tilemem_col : std_logic_vector(2 downto 0);
+  signal tilemem_row : std_logic_vector(2 downto 0);
+  signal tilemem_x : std_logic_vector(3 downto 0);
+  signal tilemem_y : std_logic_vector(3 downto 0);
+
+
+  -- Stuff for testing synthesis.
+
+  --signal addr_col : std_logic_vector(7 downto 0) := "00000000";
+  --signal addr_row : std_logic_vector(7 downto 0) := "00000000";
+  --signal data_in : std_logic_vector(7 downto 0) := "00000000";
+  --signal write_enable : std_logic := '0';
   
 begin
 
@@ -143,18 +170,11 @@ begin
             '0';
   display_valid <= '1' when x_value < h_sync_fp and y_value < v_sync_fp else
                    '0';
-
-  
-  -- Connect VGA-port pins.
-  
-  vgaRed <= x_value(5 downto 3) when display_valid = '1' else "000";
-  vgaGreen <= x_value(9 downto 7) when display_valid = '1' else "000";
-  vgaBlue <= y_value(5 downto 4) when display_valid = '1' else "00";
   Hsync <= h_sync;
   Vsync <= v_sync;
-         
 
-  -- Tile memory.
+
+  -- Map memory.
 
   map_memory : mapmem
     port map (
@@ -164,8 +184,33 @@ begin
       data_a_out  => mapmem_data_a_out,
       addr_b_row  => addr_col(5 downto 0),
       addr_b_col  => addr_row(5 downto 0),
-      data_b_in => data_in,
-      data_b_out => data_out,
+      data_b_in => data_in(5 downto 0),
+      data_b_out => data_out(5 downto 0),
       write_enable => write_enable);
+  
+  data_out(7 downto 6) <= "00";
+  
+  
+  -- Tile memory.
+  
+  tile_memory : tilemem
+    port map (
+      row_base => tilemem_row,
+      row_offset => tilemem_y,
+      col_base => tilemem_col,
+      col_offset => tilemem_x,
+      data_out => tilemem_data_out);
 
+  tilemem_col <= mapmem_data_a_out(2 downto 0);
+  tilemem_row <= mapmem_data_a_out(5 downto 3);
+  tilemem_x <= x_value(3 downto 0);
+  tilemem_y <= y_value(3 downto 0);  
+
+
+  -- Connect VGA-port pins.
+  
+  vgaRed <= tilemem_data_out(7 downto 5) when display_valid = '1' else "000";
+  vgaGreen <= tilemem_data_out(4 downto 2) when display_valid = '1' else "000";
+  vgaBlue <= tilemem_data_out(1 downto 0) when display_valid = '1' else "00";         
+  
 end gpu_behv;

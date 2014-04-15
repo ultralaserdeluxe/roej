@@ -68,8 +68,8 @@ begin  -- gpu_tb_behv
     wait for 100 ns;
     wait until rising_edge(clk);
     a_c <= "00000001";
-    a_r <= "00000010";
-    d_i <= "11110000";
+    a_r <= "00000000";
+    d_i <= "00000001";
     w_e <= '1';
 
     wait for 100 ns;
@@ -78,9 +78,9 @@ begin  -- gpu_tb_behv
 
     wait for 100 ns;
     wait until rising_edge(clk);
-    a_c <= "00000010";
+    a_c <= "00000000";
     a_r <= "00000001";
-    d_i <= "00001111";
+    d_i <= "00001001";
     w_e <= '1';
 
     wait for 100 ns;

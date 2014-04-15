@@ -41,7 +41,7 @@ alu.%: S=alu.vhd constant.vhd
 alu.%: T=alu_tb.vhd
 alu.%: U=Nexys3_Master.ucf
 
-gpu.%: S=gpu.vhd counter.vhd mapmem.vhd
+gpu.%: S=gpu.vhd counter.vhd mapmem.vhd tilemem.vhd
 gpu.%: T=gpu_tb.vhd
 gpu.%: U=Nexys3_Master.ucf
 
