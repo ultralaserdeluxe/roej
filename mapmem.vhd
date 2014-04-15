@@ -15,7 +15,7 @@ end mapmem;
 architecture mapmem_behv of mapmem is
 
   type mapmem_t is array (0 to 4096) of std_logic_vector(5 downto 0);
-  signal mapmem : mapmem_t := (others => "000000");
+  signal mapmem : mapmem_t := ("000001", others => "000000");
 
 begin
 

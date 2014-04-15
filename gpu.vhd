@@ -6,7 +6,7 @@ entity gpu is
 
   port(
     clk : in std_logic;
-    reset : in std_logic;
+    rst : in std_logic;
     vgaRed : out std_logic_vector(2 downto 0);
     vgaGreen : out std_logic_vector(2 downto 0);
     vgaBlue : out std_logic_vector(2 downto 1);
@@ -102,7 +102,7 @@ begin
       n => 2)
     port map (
       clk    => clk,
-      reset  => reset,
+      reset  => rst,
       enable => '1',
       value  => pixel_counter_value);
 
@@ -120,7 +120,7 @@ begin
       enable => x_enable,
       value  => x_value);
 
-  x_reset <= '1' when x_value = x_max or reset = '1' else
+  x_reset <= '1' when x_value = x_max or rst = '1' else
              '0';
   x_enable <= '1';
 
@@ -137,7 +137,7 @@ begin
       value  => y_value);
 
   y_reset <= '1' when y_value = y_max and x_value = x_max else
-             '1' when reset = '1' else
+             '1' when rst = '1' else
              '0';
   y_enable <= '1' when x_reset = '1' else
               '0';

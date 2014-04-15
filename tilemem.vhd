@@ -18,7 +18,7 @@ end tilemem;
 architecture tilemem_behv of tilemem is
 
   type tilemem_t is array (0 to 16383) of std_logic_vector(7 downto 0);
-  signal tilemem : tilemem_t := ("00000011", others => "11100011");
+  signal tilemem : tilemem_t := ("00000011","11100000","11100000","11100000","11100000","11100000","11100000","11100000","11100000","11100000","11100000","11100000","11100000","11100000","11100000","11100000","00011100", others => "11100011");
 
 begin
   
