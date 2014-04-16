@@ -45,6 +45,10 @@ gpu.%: S=gpu.vhd
 gpu.%: T=gpu_tb.vhd
 gpu.%: U=Nexys3_Master.ucf
 
+berika.%: S=k1k2.vhd
+berika.%: T=k1k2_tb.vhd
+berika.%: U=Nexys3_Master.ucf
+
 
 # Det här är ett exempel på hur man kan skriva en testbänk som är
 # relevant, även om man kör en simulering i batchläge (make batchlab.simc)
