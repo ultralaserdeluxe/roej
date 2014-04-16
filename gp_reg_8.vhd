@@ -15,7 +15,11 @@ begin  -- gp_reg_8_ar
   begin
     if rising_edge(clk) then
       if rst = '1' then
+<<<<<<< HEAD
         output <= "00000000";
+=======
+        tal_ut <= "00000000";
+>>>>>>> 1c219ad54cb26ddb0be298b13cc071fa25f3e9a9
       elsif load = '1' then
         output <= input;
       elsif inc = '1' then
