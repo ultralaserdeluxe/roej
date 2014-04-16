@@ -1,5 +1,3 @@
--- TestBench Template 
-
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
@@ -10,7 +8,7 @@ END gp_reg_16_tb;
 architecture gp_reg_16_tb_ar of gp_reg_16_tb is
   component gp_reg_16
     port ( clk,rst,load : in std_logic;
-           tal_in : STD_LOGIC_VECTOR(15 downto 0);
+           tal_in : in STD_LOGIC_VECTOR(15 downto 0);
            tal_ut : out  STD_LOGIC_VECTOR(15 downto 0));
   end component;
 
@@ -42,7 +40,7 @@ begin  -- gp_reg_16_tb_ar
   end process;
 
 stimuli_generator : process
-    variable i : integer;
+  variable i : integer;
   begin
 
     rst <= '1';
