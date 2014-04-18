@@ -41,13 +41,13 @@ begin
 		or (ar_in(buswidth-1)='0' and input(buswidth-1)='0' and result(buswidth-1)='1') else '0'; 
 		
 	with alu_logic select
-	ar_out <= 														--set the AR-signal
-		input when "00001",			 								--load ar
-		ar_in + 1 when "00010", 									--increment ar
-		ar_in - 1 when "00100",										--decrement ar
-		result(buswidth-1 downto 0) when "01000",					--add
-		ar_in + subinput when "10000",								--sub
-		"01010101" when others;				
+	ar_out <= 												--set the AR-signal
+		ar_in + 1 when "10000",								--inc
+		ar_in - 1 when "01000",								--dec
+		result(buswidth-1 downto 0) when "00100",			--add
+		ar_in + subinput when "00010", 						--sub
+		input when "00001",			 						--load ar		
+		ar_in when others;				
 		
 	sr.n <= '1' when ar_out(buswidth-1) = '1' else '0';						--set n-flag
 	sr.z <= '1' when ar_out = "00000000" else '0'; 	 						--set z-flag
