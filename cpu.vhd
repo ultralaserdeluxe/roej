@@ -37,6 +37,12 @@ architecture cpu_ar of cpu is
   signal mm_22 : std_logic; -- inc
   signal mm_23 : std_logic; -- dec
   -- DR
+  component data_reg
+	Port ( clk,rst,load,to_db,read_signal,write_signal : in  STD_LOGIC;
+		 data_bus : inout STD_LOGIC_VECTOR(7 downto 0);
+         input : in STD_LOGIC_VECTOR(7 downto 0);
+         output : out  STD_LOGIC_VECTOR(7 downto 0));
+  end component;
   signal mm_5 : std_logic_vector(7 downto 0);
   signal mm_6 : std_logic_vector(7 downto 0);
   -- TR
@@ -144,15 +150,17 @@ begin  -- cpu_ar
 		input <= mm_21,
 		output <= mm_24);
 		
-	--DR : gp_reg_8 
-	--port map(
-		--clk <= clk,
-		--rst <= rst,
-	--	load <= mm_6,
-		--inc <= '0',
-		--dec <= '0',
-		--input <= mm_6,
-		--output <= mm_7);
+	DR : data_reg 
+	port map(
+		clk <= clk,
+		rst <= rst,
+		load <= mm_6,
+		data_bus <= data_bus,
+		to_db <= mm_signal(5),
+		read_signal <= mm_signal(3),
+		write_signal <= mm_signal(4),
+		input <= mm_6,
+		output <= mm_7);
 		
     TR : gp_reg_8 
 	port map(
