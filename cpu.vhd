@@ -42,9 +42,10 @@ architecture cpu_ar of cpu is
 	-- TR
 	signal mm_25 : std_logic_vector(buswidth-1 downto 0);
 	signal mm_26 : std_logic_vector(buswidth-1 downto 0);
+	signal tr_out : std_logic_vector(buswidth-1 downto 0);
 	-- AR
 	signal mm_33 : std_logic_vector(buswidth-1 downto 0);
-	signal mm_37 : std_logic_vector(buswidth-1 downto 0);
+	signal mm_37 : std_logic_vector(buswidth-1 downto 0);   -- signal to alu and bus (if risen in mm_signal)
 	-- SR
 	signal mm_34 : std_logic_vector(buswidth-1 downto 0);
 	signal mm_36 : std_logic_vector(buswidth-1 downto 0);
@@ -65,7 +66,6 @@ architecture cpu_ar of cpu is
 	signal mm_27 : std_logic_vector(7 downto 0); 									-- ALU-input
 	signal alu_logic_signal : std_logic_vector(4 downto 0):= mm_signal(28 to 32); 	-- ALU-logic
 	signal ar_connect : std_logic_vector(7 downto 0); 								-- ar out
-	signal alu_buss : std_logic_vector(7 downto 0); 								-- ar in
 	signal sr_connect : std_logic_vector(7 downto 0); 								-- SR-signal
 	
 	-- inc/dec signals
@@ -157,7 +157,7 @@ begin  -- cpu_ar
 		load <= mm_signal(33),
 		inc <= '0',
 		dec <= '0',
-		input <= mm_33,
+		input <= ar_connect,
 		output <= mm_37);
 		
 	SR : gp_reg_8 
@@ -213,8 +213,9 @@ begin  -- cpu_ar
 		when mm_signal(19) = '1' => mm_19 <= bus_signal;	-- bus -> XR
 		when mm_signal(21) = '1' => mm_21 <= bus_signal;	-- bus -> SP
 		when mm_signal(25) = '1' => mm_25 <= bus_signal;	-- bus -> TR
-		when mm_signal(27) = '1' => mm_27 <= bus_signal;	-- bus -> ALU
 	end case;
+	
+	mm_27 <= mm_26 when mm_signal(27) = '1' else "00000000";
 
 	data_bus_out <= data_bus_signal;
 end cpu_ar;

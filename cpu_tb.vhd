@@ -89,7 +89,13 @@ BEGIN
 	wait for 100 ns;
 	
 	alu_logic <= "00000";
-	wait for 100 ns
+	wait for 100 ns;
+	
+	alu_logic <= "00100";
+	wait for 10 ns;
+	
+	alu_logic <= "00000";
+	wait for 10 ns;
 	
     for i in 0 to 50000000 loop         -- Vänta ett antal klockcykler
       wait until rising_edge(clk);
