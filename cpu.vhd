@@ -8,7 +8,8 @@ entity cpu is
   port(
     clk : in std_logic;
     rst : in std_logic;
-    adr_bus : in std_logic_vector(buswidth-1 downto 0));
+    adr_bus : in std_logic_vector(15 downto 0);
+	data_bus : inout std_logic_vector(7 downto 0));
    
 end cpu;
 
@@ -20,7 +21,7 @@ architecture cpu_ar of cpu is
 			output : out  STD_LOGIC_VECTOR(7 downto 0));
   end component;
   -- ADR
-  signal mm_2 : std_logic_vector(7 downto 0);
+  signal mm_2 : std_logic_vector(15 downto 0);
   signal mm_1 : std_logic_vector(7 downto 0;
   -- PC
   signal mm_17 : std_logic; -- inc
@@ -50,8 +51,8 @@ architecture cpu_ar of cpu is
   -- MPC
   signal mm_9 : std_logic_vector(4 downto 0); --K1
   signal mm_10 : std_logic_vector(2 downto 0); --K2
-  signal mm_12 : std_logic; -- reset
-  signal mm_11 : std_logic; -- inc
+  signal mm_12_connect : std_logic; -- reset
+  signal mm_11_connect : std_logic; -- inc
   
   -- ALU
   component ALU
@@ -62,34 +63,63 @@ architecture cpu_ar of cpu is
      alu_logic : in std_logic_vector(4 downto 0);			-- operation logic
 	 statusreg_out : out std_logic_vector(buswidth-1 downto 0)); -- message vector
    end component;   
+   
   signal mm_27 : std_logic_vector(7 downto 0); -- input
-  signal mm_28 : std_logic_vector(4 downto 0):= "00010"; -- inc ar
-  signal mm_29 : std_logic_vector(4 downto 0):= "00100"; -- dec ar
-  signal mm_30 : std_logic_vector(4 downto 0):= "01000"; -- add
-  signal mm_31 : std_logic_vector(4 downto 0):= "10000"; -- sub
-  signal mm_32 : std_logic_vector(4 downto 0):= "00001"; -- load
-  signal mm_33 : std_logic_vector(7 downto 0); -- ar out
-  signal mm_37 : std_logic_vector(7 downto 0); -- ar in
-  signal mm_34 : std_logic_vector(7 downto 0); -- SR
+  signal alu_logic_signal : std_logic_vector(4 downto 0);
+  signal ar_connect : std_logic_vector(7 downto 0); -- ar out
+  signal alu_buss : std_logic_vector(7 downto 0); -- ar in
+  signal sr_connect : std_logic_vector(7 downto 0); -- SR
   
+  component mm_logic_mux
+	port(
+		input : in std_logic_vector(2 downto 0);
+		alu_logic_signal : out std_logic_vector(4 downto 0));
+   end component;
+   
+   signal alu_logic_connect : std_logic_vector(4 downto 0);
+	
+   component mm_incdec_mux
+	port(
+		input : in std_logic_vector(2 downto 0);
+		mm_15 : in std_logic;
+		mm_16 : in std_logic;
+		mm_17 : in std_logic;
+		mm_22 : in std_logic;
+		mm_23 : in std_logic);
+	end component
+
+	signal mm_15_connect : std_logic;
+	signal mm_16_connect : std_logic;
+	signal mm_17_connect : std_logic;
+	signal mm_22_connect : std_logic;
+	signal mm_23_connect : std_logic;
+	
+	component micromem
+	port(
+		mpc_in : in std_logic_vector(7 downto 0);
+		mm_out : out std_logic_vector(1 to 39)
+		);
+	end component;
+	
+	signal mm_signal : std_logic_vector(1 to 39);
+	signal mm_input : std_logic_vector(7 downto 0);
+	
 begin  -- cpu_ar
 
-	ADR : gp_reg_8 
+	ADR : gp_reg_16 
 	port map(
 		clk <= clk,
 		rst <= '0',
-		load <= mm_2,
-		inc <= '0',
-		dec <= '0',
-		input <= mm_2,
-		output <= mm_1);
+		load <= mm_signal(1),
+		input <= mm_1,  
+		output <= adr_bus);
 	
 	PC : gp_reg_8 
 	port map(
 		clk <= clk,
 		rst <= rst,
-		load <= mm_13,
-		inc <= mm_17,
+		load mm_signal(13),
+		inc <= mm_signal(17),
 		dec <= '0',
 		input <= mm_13,
 		output <= mm_18);
@@ -98,7 +128,7 @@ begin  -- cpu_ar
 	port map(
 		clk <= clk,
 		rst <= rst,
-		load <= mm_19,
+		load <= mm_signal(19),
 		inc <= '0',
 		dec <= '0',
 		input <= mm_19,
@@ -108,27 +138,27 @@ begin  -- cpu_ar
 	port map(
 		clk <= clk,
 		rst <= '0',
-		load <= mm_21,
-		inc <= mm_22,
-		dec <= mm_23,
+		load <= mm_signal(21),
+		inc <= mm_signal(22),
+		dec <= mm_signal(23),
 		input <= mm_21,
 		output <= mm_24);
 		
-	DR : gp_reg_8 
-	port map(
-		clk <= clk,
-		rst <= rst,
-		load <= mm_6,
-		inc <= '0',
-		dec <= '0',
-		input <= mm_6,
-		output <= mm_7);
+	--DR : gp_reg_8 
+	--port map(
+		--clk <= clk,
+		--rst <= rst,
+	--	load <= mm_6,
+		--inc <= '0',
+		--dec <= '0',
+		--input <= mm_6,
+		--output <= mm_7);
 		
     TR : gp_reg_8 
 	port map(
 		clk <= clk,
 		rst <= rst,
-		load <= mm_25,
+		load <= mm_signal(25),
 		inc <= '0',
 		dec <= '0',
 		input <= mm_25,
@@ -138,7 +168,7 @@ begin  -- cpu_ar
 	port map(
 		clk <= clk,
 		rst <= '0',
-		load <= mm_33,
+		load <= mm_signal(33),
 		inc <= '0',
 		dec <= '0',
 		input <= mm_33,
@@ -148,29 +178,38 @@ begin  -- cpu_ar
 	port map(
 		clk <= clk,
 		rst <= '0',
-		load <= mm_34,
+		load <= mm_signal(34),
 		inc <= '0',
 		dec <= '0',
-		input <= mm_34,
+		input <= sr_connect,
 		output <= mm_36);
 		
 	MPC : gp_reg_8 
 	port map(
 		clk <= clk,
-		rst <= mm_12,
-		load <= mm_9 & mm_10,
-		inc <= mm_11,
+		rst <= mm_signal(12),
+		load <= mm_signal(9) or mm_signal(10),
+		inc <= mm_signal(11),
 		dec <= '0',
-		input <= mm_9 & mm_10,
-		output <= mm);
+		input <= k1 & k2,
+		output <= mm_input);
 		
-	alu_comp : ALU'
+	alu_comp : ALU
 	port map(
 		input <= mm_27,      -- input from bus
 		ar_in <= mm_37,       -- input from ar
 		ar_out <= mm_33,    -- signal to ar
-		alu_logic <= 	-- operation logic
-		statusreg_out <= mm_34); -- message vector
-
+		alu_logic <= alu_logic_signal,	-- operation logic
+		statusreg_out <= sr_connect); -- message vector
+		
+	mm : micromem
+	port map(
+		mpc_in <= mm_input,
+		mm_out <= mm_signal);
 
 end cpu_ar;
+
+--MUXBUSS
+--k1k2
+--micromem
+--
