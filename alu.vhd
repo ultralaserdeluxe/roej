@@ -5,10 +5,10 @@ use ieee.std_logic_unsigned.all;
 
 entity alu is    
    port (
-     input : in std_logic_vector(buswidth-1 downto 0);      -- input from bus
-     ar_in: in std_logic_vector(buswidth-1 downto 0);       -- input from ar
-     ar_out : buffer std_logic_vector(buswidth-1 downto 0);    -- signal to ar
-     alu_logic : in std_logic_vector(4 downto 0);			-- operation logic
+     input : in std_logic_vector(buswidth-1 downto 0);      	 -- input from bus
+     ar_in: in std_logic_vector(buswidth-1 downto 0);       	 -- input from ar
+     ar_out : buffer std_logic_vector(buswidth-1 downto 0);      -- signal to ar
+     alu_logic : in std_logic_vector(4 downto 0);				 -- operation logic
 	 statusreg_out : out std_logic_vector(buswidth-1 downto 0)); -- message vector
 end alu;
     
@@ -52,7 +52,7 @@ begin
 	sr.n <= '1' when ar_out(buswidth-1) = '1' else '0';						--set n-flag
 	sr.z <= '1' when ar_out = "00000000" else '0'; 	 						--set z-flag
 	sr.c <= '1' when carry_result(buswidth)='1' or 
-					(ar_in="11111111" and alu_logic="00010") else '0';				--set c-flag
+					(ar_in="11111111" and alu_logic="00010") else '0';		--set c-flag
 	sr.o <= '1' when overflow = '1' or
 					(alu_logic = "00010" and ar_in = "01111111") else '0'; 	--set o-flag	
 	sr.l <= '0';															--set l-flag

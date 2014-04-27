@@ -7,8 +7,10 @@ entity cpu is
   port(
     clk : in std_logic;
     rst : in std_logic;
-    adr_bus : in std_logic_vector(adr_buswidth downto 0);
-	data_bus_out : inout std_logic_vector(buswidth-1 downto 0));
+    adr_bus : in std_logic_vector(adr_buswidth-1 downto 0);
+	data_bus_out : inout std_logic_vector(buswidth-1 downto 0);
+	read_signal : out std_logic;
+	write_signal : out std_logic);
 end cpu;
 architecture cpu_ar of cpu is
 	component gp_reg_8
@@ -47,13 +49,15 @@ architecture cpu_ar of cpu is
 	signal mm_33 : std_logic_vector(buswidth-1 downto 0);
 	signal mm_37 : std_logic_vector(buswidth-1 downto 0);   -- signal to alu and bus (if risen in mm_signal)
 	-- SR
-	signal mm_34 : std_logic_vector(buswidth-1 downto 0);
 	signal mm_36 : std_logic_vector(buswidth-1 downto 0);
 	-- MPC
 	signal mm_9 : std_logic_vector(buswidth-1 downto 0); 	-- K1
 	signal mm_10 : std_logic_vector(buswidth-1 downto 0); 	-- K2
 	signal mm_12_connect : std_logic:= mm_signal(12); 		-- reset
 	signal mm_11_connect : std_logic:= mm_signal(11); 		-- inc
+	-- HR
+	signal mm_38 : std_logic_vector(buswidth-1 downto 0);
+	signal mm_39 : std_logic_vector(buswidth-1 downto 0);
 	-- ALU
 	component ALU
 		port (
@@ -63,10 +67,10 @@ architecture cpu_ar of cpu is
 			alu_logic : in std_logic_vector(4 downto 0);				-- operation logic
 			statusreg_out : out std_logic_vector(buswidth-1 downto 0)); -- message vector
 	end component;   
-	signal mm_27 : std_logic_vector(7 downto 0); 									-- ALU-input
-	signal alu_logic_signal : std_logic_vector(4 downto 0):= mm_signal(28 to 32); 	-- ALU-logic
-	signal ar_connect : std_logic_vector(7 downto 0); 								-- ar out
-	signal sr_connect : std_logic_vector(7 downto 0); 								-- SR-signal
+	signal mm_27 : std_logic_vector(7 downto 0); 						-- ALU-input
+	signal alu_logic_signal : std_logic_vector(4 downto 0); 			-- ALU-logic
+	signal ar_connect : std_logic_vector(7 downto 0); 					-- ar out
+	signal sr_connect : std_logic_vector(7 downto 0); 					-- SR-signal
 	
 	-- inc/dec signals
 	-- K3
@@ -88,6 +92,14 @@ architecture cpu_ar of cpu is
 	signal mm_input : std_logic_vector(7 downto 0);
 	--bus signal
 	signal bus_signal : std_logic_vector(buswidth-1 downto 0);
+	--k3
+	component k3
+	port(mm_signal: in std_logic_vector(1 to 39);
+		input: in std_logic_vector(buswidth-1 downto 0);
+		k3_out : out STD_LOGIC_VECTOR(buswidth-1 downto 0));
+	end component;
+	signal pc_connect: std_logic_vector(buswidth-1 downto 0);
+	signal pc_load_signal: std_logic;
 	
 begin  -- cpu_ar
 	ADR : gp_reg_16 
@@ -102,10 +114,10 @@ begin  -- cpu_ar
 	port map(
 		clk <= clk,
 		rst <= '0',
-		load <= mm_signal(13),
+		load <= pc_load_signal,
 		inc <= mm_signal(17),
 		dec <= '0',
-		input <= mm_13,
+		input <= pc_connect,
 		output <= mm_18);
 		
 	XR : gp_reg_8
@@ -180,19 +192,35 @@ begin  -- cpu_ar
 		input <= k1 & k2,
 		output <= mm_input);
 		
+	HR : gp_reg_8 
+	port map(
+		clk <= clk,
+		rst <= '0',
+		load <= mm_signal(38),
+		inc <= '0',
+		dec <= '0',
+		input <= mm_38,
+		output <= mm_39);
+		
 	alu_comp : ALU
 	port map(
 		input <= mm_27,      			-- input from bus
-		ar_in <= mm_37,       			-- input from ar
-		ar_out <= mm_33,    			-- signal to ar
+		ar_in <= mm_37,       			-- input from AR
+		ar_out <= mm_33,    			-- output to AR
 		alu_logic <= alu_logic_signal,	-- operation logic
-		statusreg_out <= sr_connect); 	-- message vector
+		statusreg_out <= sr_connect); 	-- output to SR
 		
 	mm : micromem
 	port map(
 		mpc_in <= mm_input,
 		mm_out <= mm_signal);
-	
+		
+	k3_comp : k3
+	port map(
+		mm_signal <= mm_signal,
+		input <= bus_signal,
+		k3_out <= mm_14);
+		
 	--to bus mux
 	case mm_signal is
 		when mm_signal(7) = '1' => bus_signal <= mm_7;    	-- DR -> bus
@@ -215,9 +243,16 @@ begin  -- cpu_ar
 		when mm_signal(25) = '1' => mm_25 <= bus_signal;	-- bus -> TR
 	end case;
 	
-	mm_27 <= mm_26 when mm_signal(27) = '1' else "00000000";
+	read_signal <= mm_signal(3);								-- Read-output
+	write_signal <= mm_signal(4);								-- Write-output	
+	mm_27 <= mm_26 when mm_signal(27) = '1' else "00000000";	-- ALU-input
+	pc_connect <= mm_14 when mm_signal(14)='1' else mm_13;		-- PC-input
+	pc_load_signal <= (mm_signal(13) or mm_signal(14));			-- PC-load
+	alu_logic_signal <= mm_signal(28 to 32);					-- ALU-logic-signal
+	mm_38 <= mm_37;												-- HR-input
+	ar_connect <= mm_39 when mm_signal(39)='1' else mm_33;		-- AR-input
+	
 
 	data_bus_out <= data_bus_signal;
 end cpu_ar;
---K3
 --micromem
