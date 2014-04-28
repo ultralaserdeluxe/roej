@@ -1,17 +1,17 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
+use work.constants.all;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity data_reg is
   Port ( clk,rst,load,to_db,read_signal,write_signal : in  STD_LOGIC;
-		 data_bus : inout STD_LOGIC_VECTOR(7 downto 0);
-         input : in STD_LOGIC_VECTOR(7 downto 0);
-         output : out  STD_LOGIC_VECTOR(7 downto 0));
+		 data_bus : inout STD_LOGIC_VECTOR(buswidth-1 downto 0);
+         input : in STD_LOGIC_VECTOR(buswidth-1 downto 0);
+         output : out  STD_LOGIC_VECTOR(buswidth-1 downto 0));
 end data_reg;
 architecture data_reg_ar of data_reg is
 
-signal value_signal : STD_LOGIC_VECTOR(7 downto 0);
+signal value_signal : STD_LOGIC_VECTOR(buswidth-1 downto 0);
 
 begin  -- data_reg_ar
   process(clk)

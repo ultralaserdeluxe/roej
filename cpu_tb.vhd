@@ -9,60 +9,55 @@ END cpu_tb;
 ARCHITECTURE behavior OF cpu_tb IS 
 
   -- Component Declaration
-  COMPONENT alu
-    PORT(
-      input : in std_logic_vector(buswidth-1 downto 0);   
-      ar_in : in std_logic_vector(buswidth-1 downto 0);           
-      ar_out : buffer std_logic_vector(buswidth-1 downto 0);     
-      alu_logic : in std_logic_vector(4 downto 0);
-	  statusreg_out : out std_logic_vector(buswidth-1 downto 0));
-  END COMPONENT;
+  component cpu
+  port(
+    clk : in std_logic;
+    rst : in std_logic;
+    adr_bus : out std_logic_vector(adr_buswidth-1 downto 0);
+	data_bus_out : inout std_logic_vector(buswidth-1 downto 0);
+	read_signal : out std_logic;
+	write_signal : out std_logic);
+  end component;
   
-  component gp_reg_8
-    port (clk, rst, load: in std_logic;
-          tal_in: in std_logic_vector(buswidth-1 downto 0);
-          tal_ut: out std_logic_vector(buswidth-1 downto 0));
+  component primmem
+  port(
+	 clk : in std_logic;
+	 adr_bus : in std_logic_vector(15 downto 0);
+	 data_bus : inout std_logic_vector(buswidth-1 downto 0);
+	 read_signal : in std_logic;
+	 write_signal : in std_logic);
   end component;
   
   signal clk : std_logic := '0';
   signal rst : std_logic := '0';
-  signal ar_in : std_logic_vector(buswidth-1 downto 0);
-  signal alu_logic : std_logic_vector(4  downto 0);
-  signal input : std_logic_vector(buswidth-1 downto 0);
-  signal ar_out : std_logic_vector(buswidth-1  downto 0);
-  signal load : std_logic := '0';
-  signal tal_in : std_logic_vector(buswidth-1 downto 0);
-  signal tal_ut : std_logic_vector(buswidth-1 downto 0);
+  signal adr_bus_connect : std_logic_vector(adr_buswidth-1 downto 0);
+  signal data_bus_out_connect : std_logic_vector(buswidth-1 downto 0);
+  signal read_signal_connect : std_logic;
+  signal write_signal_connect : std_logic;
   signal tb_running : boolean := true;
-  signal to_bus : std_logic_vector(buswidth-1 downto 0);
-  signal ar_connect : std_logic_vector(buswidth-1 downto 0);
-  signal ar_connect_wrap : std_logic_vector(buswidth -1 downto 0);
-  signal statusreg_connect : std_logic_vector(buswidth-1 downto 0);
   
 BEGIN
 
-  -- Component Instantiation
-	alucomp: alu PORT MAP(
-		input => input,
-		ar_in => ar_connect_wrap,
-		ar_out => ar_connect,
-		alu_logic => alu_logic,
-		statusreg_out => statusreg_connect);
-
-	arcomp: gp_reg_8 port map (
-		clk => clk,
-		rst => rst,
-		load => load,
-		tal_in => ar_connect,
-		tal_ut => ar_connect_wrap);
 	
-	srcomp: gp_reg_8 port map(
-		clk => clk,
-		rst => rst,
-		load => load,
-		tal_in => statusreg_connect,
-		tal_ut => to_bus);
 
+  -- Component Instantiation
+  cpu_comp : cpu
+  port map(
+	clk => clk,
+	rst => rst,
+	adr_bus => adr_bus_connect,
+	data_bus_out => data_bus_out_connect,
+	read_signal => read_signal_connect,
+	write_signal => write_signal_connect);
+  
+  primmem_comp : primmem
+  port map(
+	clk => clk,
+	adr_bus => adr_bus_connect,
+	data_bus => data_bus_out_connect,
+	read_signal => read_signal_connect,
+	write_signal => write_signal_connect);
+  
   clk_gen : process
   begin
     while tb_running loop
@@ -77,29 +72,17 @@ BEGIN
   stimuli_generator : process
   
   begin
-  
-	rst <= '1';
-	wait for 100 ns;
-    wait until rising_edge(clk);
-	rst <= '0';
-	
-	load <= '1';
-	input <= "00000001";
-	alu_logic <= "00010";
-	wait for 100 ns;
-	
-	alu_logic <= "00000";
-	wait for 100 ns;
-	
-	alu_logic <= "00100";
-	wait for 10 ns;
-	
-	alu_logic <= "00000";
-	wait for 10 ns;
+  rst <= '0';
+  wait for 100 ns;
+  rst <= '1';
+  wait for 100 ns;
+  rst <= '0';
+  wait for 100 ns;
 	
     for i in 0 to 50000000 loop         -- Vänta ett antal klockcykler
       wait until rising_edge(clk);
     end loop;  
+
     
   end process;
 END;
