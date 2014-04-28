@@ -41,7 +41,7 @@ hej.%: S=alu.vhd constant.vhd
 hej.%: T=alu_tb.vhd
 hej.%: U=Nexys3_Master.ucf
 
-gpu.%: S=gpu.vhd
+gpu.%: S=gpu.vhd sprite.vhd counter.vhd mapmem.vhd tilemem.vhd
 gpu.%: T=gpu_tb.vhd
 gpu.%: U=Nexys3_Master.ucf
 
