@@ -43,7 +43,11 @@ hej.%: U=Nexys3_Master.ucf
 
 gpu.%: S=gpu.vhd sprite.vhd counter.vhd mapmem.vhd tilemem.vhd
 gpu.%: T=gpu_tb.vhd
-gpu.%: U=Nexys3_Master.ucf
+gpu.%: U=gpu.ucf
+
+ps2.%: S=ps2.vhd
+ps2.%: T=
+ps2.%: U=ps2.ucf
 
 berika.%: S=k1k2.vhd
 berika.%: T=k1k2_tb.vhd
