@@ -129,9 +129,9 @@ Net "rst" LOC = B8 | IOSTANDARD = LVCMOS33; #Bank = 0, pin name = IO_L33P, Sch n
 #Net "PS2KeyboardData" LOC = J13| IOSTANDARD = LVCMOS33; #Bank = 1, pin name = IO_L39P_M1A3, Sch name = PIC-SDI1
 #Net "PS2KeyboardClk" LOC = L12 | IOSTANDARD = LVCMOS33; #Bank = 1, pin name = IO_L40P_GCLK11_M1A5, Sch name = PIC-SCK1
 
-Net "PS2MouseData" LOC = K14 | IOSTANDARD = LVCMOS33; #Bank = 1, pin name = IO_L39N_M1ODT, Sch name = PIC-SDO1
-Net "PS2MouseClk"  LOC = L13 | IOSTANDARD = LVCMOS33; #Bank = 1, pin name = IO_L40N_GCLK10_M1A6, Sch name = PIC-SS1
-
+#Net "PS2MouseData" LOC = K14 | IOSTANDARD = LVCMOS33; #Bank = 1, pin name = IO_L39N_M1ODT, Sch name = PIC-SDO1
+#Net "PS2MouseClk"  LOC = L13 | IOSTANDARD = LVCMOS33; #Bank = 1, pin name = IO_L40N_GCLK10_M1A6, Sch name = PIC-SS1
+ 
 #Net "PicGpio<0>" LOC = L16 | IOSTANDARD = LVCMOS33; #Bank = 1, pin name = IO_L42N_GCLK6_TRDY1_M1LDM, Sch name = PIC-GPIO0
 #NET "PicGpio<1>" LOC = H17 | IOSTANDARD = LVCMOS33; #Bank = 1, pin name = IO_L43P_GCLK5_M1DQ4, Sch name = PIC-GPIO1
 
@@ -197,14 +197,14 @@ Net "Led<7>" LOC = T11 |  IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L16N_V
 ## 12 pin connectors
 
 ##JA
-#Net "JA<0>" LOC = T12 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L19P, Sch name = JA1
-#Net "JA<1>" LOC = V12 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L19N, Sch name = JA2  
-#Net "JA<2>" LOC = N10 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L20P, Sch name = JA3
-#Net "JA<3>" LOC = P11 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L20N, Sch name = JA4
-#Net "JA<4>" LOC = M10 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L22P, Sch name = JA7
-#Net "JA<5>" LOC = N9 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L22N, Sch name = JA8
-#Net "JA<6>" LOC = U11 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L23P, Sch name = JA9
-#Net "JA<7>" LOC = V11 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L23N, Sch name = JA10
+Net "JA<0>" LOC = T12 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L19P, Sch name = JA1
+Net "JA<1>" LOC = V12 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L19N, Sch name = JA2  
+Net "JA<2>" LOC = N10 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L20P, Sch name = JA3
+Net "JA<3>" LOC = P11 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L20N, Sch name = JA4
+Net "JA<4>" LOC = M10 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L22P, Sch name = JA7
+Net "JA<5>" LOC = N9 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L22N, Sch name = JA8
+Net "JA<6>" LOC = U11 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L23P, Sch name = JA9
+Net "JA<7>" LOC = V11 | IOSTANDARD = LVCMOS33; #Bank = 2, pin name = IO_L23N, Sch name = JA10
 
 ##JB
 #Net "JB<0>" LOC = K2 | IOSTANDARD = LVCMOS33; #Bank = 3, pin name = IO_L38P_M3DQ2, Sch name = JB1
