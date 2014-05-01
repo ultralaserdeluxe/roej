@@ -7,6 +7,7 @@ use ieee.std_logic_unsigned.all;
 entity tilemem is
 
   port(
+    clk : in std_logic;
     row_base : in std_logic_vector(2 downto 0);
     row_offset : in std_logic_vector(3 downto 0);
     col_base : in std_logic_vector(2 downto 0);
@@ -1051,6 +1052,11 @@ begin
   row <= row_base & row_offset;
   col <= col_base & col_offset;
 
-  data_out <= tilemem(conv_integer(row) * 128 + conv_integer(col));
+  process(clk)
+  begin
+    if rising_edge(clk) then
+      data_out <= tilemem(conv_integer(row) * 128 + conv_integer(col));           
+    end if;
+  end process;
   
 end tilemem_behv;
