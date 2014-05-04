@@ -45,7 +45,7 @@ gpu.%: S=gpu.vhd sprite.vhd counter.vhd mapmem.vhd tilemem.vhd
 gpu.%: T=gpu_tb.vhd
 gpu.%: U=gpu.ucf
 
-ps2.%: S=ps2.vhd
+ps2.%: S=ps2.vhd counter.vhd
 ps2.%: T=
 ps2.%: U=ps2.ucf
 
