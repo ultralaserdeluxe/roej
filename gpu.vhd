@@ -79,6 +79,7 @@ architecture gpu_behv of gpu is
 
   component tilemem
       port(
+        clk : in std_logic;
         row_base : in std_logic_vector(2 downto 0);
         row_offset : in std_logic_vector(3 downto 0);
         col_base : in std_logic_vector(2 downto 0);
@@ -185,6 +186,7 @@ begin
   
   tile_memory : tilemem
     port map (
+      clk => clk,
       row_base => tilemem_row,
       row_offset => tilemem_y,
       col_base => tilemem_col,
