@@ -24,6 +24,6 @@ begin  -- gp_reg_8_ar
         reg_value <= reg_value - '1';
       end if;
     end if;
-	output <= reg_value;
   end process;
+  output <= reg_value;
 end gp_reg_8_ar;

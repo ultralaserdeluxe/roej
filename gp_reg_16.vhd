@@ -20,6 +20,6 @@ begin  -- gp_reg_16_ar
         value <= input;
       end if;
     end if;
-	output <= value;
   end process;
+  output <= value;
 end gp_reg_16_ar;
