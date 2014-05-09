@@ -37,23 +37,36 @@ architecture ps2_behv of ps2 is
 
   signal clk_sync_reg : std_logic_vector(1 to 3);
   signal data_sync_reg : std_logic_vector(1 to 3);
-  signal rst_sync_reg : std_logic_vector(1 to 3);
   signal clk_rise : std_logic;
   signal clk_fall : std_logic;
-  signal rst_rise : std_logic;
 
   type state_type is (init, set_clock_low, set_data_low, release_clk,
-                      wait_clk_low_1, send_bit, wait_clk_high, wait_clk_low_2,
-                      done, wait_clk_high_2, wait_clk_low_3);
+                      send_bit, wait_clk_high_tx, wait_clk_low_tx, wait_clk_high_ack,
+                      wait_clk_low_ack, wait_clk_rel_ack,
+                      wait_clk_low_rx, wait_clk_high_rx, get_bit, rx_done);
   signal state : state_type := init;
 
-  constant delay_500_us : std_logic_vector(15 downto 0) := "1100001101010000";
-  constant delay_200_us : std_logic_vector(15 downto 0) := "0100111000100000";
-  constant delay_15_us : std_logic_vector(15 downto 0) := "0000010111011100";
-  signal delay_reset : std_logic;
-  signal delay_enable : std_logic;
-  signal delay_value : std_logic_vector(15 downto 0);
+  -- 500 us delay counter
+  constant delay_500_max : std_logic_vector(15 downto 0) := "1100001101010000";
+  signal delay_500_value : std_logic_vector(15 downto 0);
+  signal delay_500_enable : std_logic;
+  signal delay_500_reset : std_logic;
+  signal delay_500_done : std_logic;
 
+  -- 200 us delay counter
+  constant delay_200_max : std_logic_vector(15 downto 0) := "0100111000100000";
+  signal delay_200_value : std_logic_vector(15 downto 0);
+  signal delay_200_enable : std_logic;
+  signal delay_200_reset : std_logic;
+  signal delay_200_done : std_logic;
+  
+  -- 15 us delay counter
+  constant delay_15_max : std_logic_vector(15 downto 0) := "0000010111011100";
+  signal delay_15_value : std_logic_vector(15 downto 0);
+  signal delay_15_enable : std_logic;
+  signal delay_15_reset : std_logic;
+  signal delay_15_done : std_logic;  
+  
   -- Enable data reporting command, 0xF4.
   -- Parity and stop bits in front of 0xF4. Start bit excluded.
   signal command : std_logic_vector(9 downto 0) := "1011110100";
@@ -77,13 +90,11 @@ begin
     if rising_edge(clk) then
       data_sync_reg <= ps2_data & data_sync_reg(1 to 2);
       clk_sync_reg <= ps2_clk & clk_sync_reg(1 to 2);
-      rst_sync_reg <= rst & rst_sync_reg(1 to 2);
     end if;
   end process;
 
   clk_rise <= clk_sync_reg(2) and not clk_sync_reg(3);
   clk_fall <= clk_sync_reg(3) and not clk_sync_reg(2);
-  rst_rise <= rst_sync_reg(3) and not rst_sync_reg(2);
   data_in <= data_sync_reg(3);
   clk_in <= clk_sync_reg(3);
   
@@ -92,27 +103,21 @@ begin
 
   led(0) <= data_in;
   led(1) <= clk_in;
-  led(6) <= mouse_data_packet(1);
-  led(7) <= mouse_data_packet(2);
 
   
   -- State machine.
 
-  delay_cnt : counter
-    generic map (
-      n => 16)
-    port map (
-      clk => clk,
-      reset => delay_reset,
-      enable => delay_enable,
-      value => delay_value);
-
   process(clk)
   begin
     if rising_edge(clk) then
-      if rst = '1' then
-        state <= init;
-      end if;
+      delay_500_enable <= '0';
+      delay_500_reset <= '1';
+      delay_200_enable <= '0';
+      delay_200_reset <= '1';
+      delay_15_enable <= '0';
+      delay_15_reset <= '1';
+      clk_enable <= '0';
+      data_enable <= '0';
       
       if state = init then
         led(2 to 5) <= "0000";
@@ -120,13 +125,8 @@ begin
         clk_enable <= '0';
         data_enable <= '0';
 
-        delay_enable <= '1';
-        delay_reset <= '0';
-        if delay_value = delay_500_us then
-          state <= set_clock_low;
-          delay_enable <= '0';
-          delay_reset <= '1';
-        end if;
+        delay_500_enable <= '1';
+        delay_500_reset <= '0';
 
       elsif state = set_clock_low then
         led(2 to 5) <= "0001";
@@ -134,93 +134,186 @@ begin
         clk_enable <= '1';
         clk_out <= '0';
 
-        delay_enable <= '1';
-        delay_reset <= '0';
-        if delay_value = delay_200_us then
-          state <= set_data_low;
-          delay_enable <= '0';
-          delay_reset <= '1';   
-        end if;
+        delay_200_enable <= '1';
+        delay_200_reset <= '0';
 
       elsif state = set_data_low then
         led(2 to 5) <= "0010";
-        
+
+        clk_enable <= '1';
+        clk_out <= '0';
         data_enable <= '1';
         data_out <= '0';
         
-        delay_enable <= '1';
-        delay_reset <= '0';
-        if delay_value = delay_15_us then
-          state <= release_clk;        
-          delay_enable <= '0';
-          delay_reset <= '1';
-        end if;
+        delay_15_enable <= '1';
+        delay_15_reset <= '0';
 
       elsif state = release_clk then
         led(2 to 5) <= "0011";
 
         clk_enable <= '0';
-        state <= wait_clk_low_1;
-
-      elsif state = wait_clk_low_1 then
-        led(2 to 5) <= "0100";
-
-        if clk_fall = '1' then
-          state <= send_bit;
-        end if;
+        data_enable <= '1';
+        data_out <= '0';
 
       elsif state = send_bit then
-        led(2 to 5) <= "0101";
-        
+        led(2 to 5) <= "0100";
+
+        data_enable <= '1';        
         data_out <= command(0);
         command <= '0' & command(9 downto 1);
         bit_counter <= bit_counter + 1;
-        state <= wait_clk_high;
 
-      elsif state = wait_clk_high then
-        if clk_rise = '1' then
-          state <= wait_clk_low_2;          
-        end if;
+      elsif state = wait_clk_high_tx then
+        led(2 to 5) <= "0101";
 
-      elsif state = wait_clk_low_2 then
-        if clk_fall = '1' then
-          if bit_counter = "1010" then
-            state <= done;
-          else
-            state <= send_bit;
-          end if;
-        end if;
-
-      elsif state = done then
+        data_enable <= '1';
+        
+      elsif state = wait_clk_low_tx then
         led(2 to 5) <= "0110";
 
-        clk_enable <= '0';
-        data_enable <= '0';
+        data_enable <= '1';
 
-        state <= wait_clk_high_2;
-
-      elsif state = wait_clk_high_2 then
+      elsif state = wait_clk_high_ack then
         led(2 to 5) <= "0111";
 
-        if clk_rise = '1' then
-          mouse_data_packet <= data_sync_reg(3) & mouse_data_packet(32 downto 1);
-          mouse_data_counter <= mouse_data_counter + 1;
-          state <= wait_clk_low_3;
-        end if;
-        
-      elsif state = wait_clk_low_3 then
+      elsif state = wait_clk_low_ack then
         led(2 to 5) <= "1000";
 
-        if clk_fall = '1' then
-          if mouse_data_counter = "100001" then
-            state <= done;
-            mouse_data_counter <= "000000";
-          else
-            state <= wait_clk_high_2;
-          end if;
+      elsif state = wait_clk_rel_ack then
+        led(2 to 5) <= "1001";
+
+      elsif state = wait_clk_low_rx then
+        led(2 to 5) <= "1011";
+
+      elsif state = wait_clk_high_rx then
+        led(2 to 5) <= "1100";
+
+      elsif state = get_bit then
+        led(2 to 5) <= "1101";
+
+        mouse_data_packet <= data_in & mouse_data_packet(32 downto 1);
+        mouse_data_counter <= mouse_data_counter + 1;
+
+      elsif state = rx_done then
+        led(2 to 5) <= "1110";
+
+        led(6) <= mouse_data_packet(1);
+        led(7) <= mouse_data_packet(2);
+        
+      end if;
+    end if;
+  end process;
+
+  process(clk)
+  begin
+    if rising_edge(clk) then
+      if rst = '1' then
+        state <= init;
+        
+      elsif state = init and delay_500_done = '1' then
+        state <= set_clock_low;
+
+      elsif state = set_clock_low and delay_200_done = '1' then
+        state <= set_data_low;
+
+      elsif state = set_data_low and delay_15_done = '1' then
+        state <= release_clk;
+
+      elsif state = release_clk and clk_fall = '1' then
+        state <= send_bit;
+
+      elsif state = send_bit then
+        state <= wait_clk_high_tx;
+
+      elsif state = wait_clk_high_tx and clk_rise = '1' then
+        state <= wait_clk_low_tx;
+
+      elsif state = wait_clk_low_tx  and clk_fall = '1' then
+        if bit_counter = "1010" then
+          state <= wait_clk_high_ack;
+        else
+          state <= send_bit;
         end if;
 
+      elsif state = wait_clk_high_ack and clk_rise = '1' then
+        state <= wait_clk_low_ack;
+
+      elsif state = wait_clk_low_ack and clk_fall = '1' then
+        state <= wait_clk_rel_ack;
+
+      elsif state = wait_clk_rel_ack and clk_rise = '1' then
+        state <= wait_clk_low_rx;        
+
+      elsif state = wait_clk_low_rx and clk_fall = '1' then
+        state <= get_bit;
+
+      elsif state = wait_clk_high_rx and clk_rise = '1' then
+        state <= wait_clk_low_rx;
+
+      elsif state = get_bit then
+        if mouse_data_counter <= "100001" then
+          state <= rx_done;
+        else
+          state <= wait_clk_high_rx;
+        end if;
+
+      elsif state = rx_done then
+        state <= wait_clk_low_rx;
+
       end if;
+    end if;
+  end process;
+
+  
+  -- Delay counters
+
+  counter_500 : counter
+    generic map (
+      n => 16)
+    port map (
+      clk => clk,
+      reset => delay_500_reset,
+      enable => delay_500_enable,
+      value => delay_500_value);
+
+  counter_200 : counter
+    generic map (
+      n => 16)
+    port map (
+      clk => clk,
+      reset => delay_200_reset,
+      enable => delay_200_enable,
+      value => delay_200_value);
+
+  counter_15 : counter
+    generic map (
+      n => 16)
+    port map (
+      clk => clk,
+      reset => delay_15_reset,
+      enable => delay_15_enable,
+      value => delay_15_value);
+
+  process(clk)
+  begin
+    if rising_edge(clk) then
+        delay_500_done <= '0';
+        delay_200_done <= '0';        
+        delay_15_done <= '0';        
+
+      if delay_500_value = delay_500_max then
+        delay_500_done <= '1';
+      end if;
+        
+
+      if delay_200_value = delay_200_max then
+        delay_200_done <= '1';
+      end if;
+
+      if delay_15_value = delay_15_max then
+        delay_15_done <= '1';
+      end if;
+        
     end if;
   end process;
 
