@@ -24,8 +24,8 @@ architecture ps2_behv of ps2 is
       value  : out std_logic_vector(n - 1 downto 0));
   end component;
   
-  alias ps2_data : std_logic is ja(0);
-  alias ps2_clk : std_logic is ja(2);
+  alias ps2_data : std_logic is ja(4);
+  alias ps2_clk : std_logic is ja(6);
 
   signal data_enable : std_logic := '0';
   signal data_out : std_logic;
@@ -56,7 +56,7 @@ architecture ps2_behv of ps2 is
 
   -- Enable data reporting command, 0xF4.
   -- Parity and stop bits in front of 0xF4. Start bit excluded.
-  signal command : std_logic_vector(9 downto 0) := "1111110100";
+  signal command : std_logic_vector(9 downto 0) := "1011110100";
   signal bit_counter : std_logic_vector(3 downto 0) := "0000";
 
   signal mouse_data_packet : std_logic_vector(32 downto 0) := "000000000000000000000000000000000";
@@ -110,7 +110,7 @@ begin
   process(clk)
   begin
     if rising_edge(clk) then
-      if rst = '1' and state = done then
+      if rst = '1' then
         state <= init;
       end if;
       
@@ -202,7 +202,7 @@ begin
       elsif state = wait_clk_high_2 then
         led(2 to 5) <= "0111";
 
-        if clk_fall = '1' then
+        if clk_rise = '1' then
           mouse_data_packet <= data_sync_reg(3) & mouse_data_packet(32 downto 1);
           mouse_data_counter <= mouse_data_counter + 1;
           state <= wait_clk_low_3;
@@ -211,7 +211,7 @@ begin
       elsif state = wait_clk_low_3 then
         led(2 to 5) <= "1000";
 
-        if clk_rise = '1' then
+        if clk_fall = '1' then
           if mouse_data_counter = "100001" then
             state <= done;
             mouse_data_counter <= "000000";
@@ -219,9 +219,9 @@ begin
             state <= wait_clk_high_2;
           end if;
         end if;
-        
+
       end if;
     end if;
   end process;
-  
+
 end ps2_behv;
