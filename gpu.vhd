@@ -11,7 +11,12 @@ entity gpu is
     vgaGreen : out std_logic_vector(2 downto 0);
     vgaBlue : out std_logic_vector(2 downto 1);
     Hsync : out std_logic;
-    Vsync : out std_logic);
+    Vsync : out std_logic;
+    address : in std_logic_vector(15 downto 0);
+    data_in : in std_logic_vector(7 downto 0);
+    w_enable : in std_logic;
+    sprite_x_pos : in std_logic_vector(9 downto 0);
+    sprite_y_pos : in std_logic_vector(9 downto 0));
   
 end gpu;
     
@@ -69,7 +74,10 @@ architecture gpu_behv of gpu is
       clk : in std_logic;
       addr_a_row : in std_logic_vector(5 downto 0);
       addr_a_col : in std_logic_vector(5 downto 0);
-      data_a_out : out std_logic_vector(5 downto 0));
+      data_a_out : out std_logic_vector(5 downto 0);
+      address    : in std_logic_vector(11 downto 0);
+      data_a_in  : in std_logic_vector(5 downto 0);
+      w_enable   : in std_logic);
   end component;
 
   signal mapmem_data_a_out : std_logic_vector(5 downto 0);
@@ -104,7 +112,9 @@ architecture gpu_behv of gpu is
       pixel_x_pos : in std_logic_vector(9 downto 0);
       pixel_y_pos : in std_logic_vector(9 downto 0);
       rgb_in : in std_logic_vector(7 downto 0);
-      rgb_out : out std_logic_vector(7 downto 0));
+      rgb_out : out std_logic_vector(7 downto 0);
+      sprite_x_pos : std_logic_vector(9 downto 0);
+      sprite_y_pos : std_logic_vector(9 downto 0));
   end component;
 
   signal sprite_rgb_out : std_logic_vector(7 downto 0);
@@ -179,7 +189,10 @@ begin
       clk => clk,
       addr_a_row  => y_value(9 downto 4),
       addr_a_col  => x_value(9 downto 4),
-      data_a_out  => mapmem_data_a_out);
+      data_a_out  => mapmem_data_a_out,
+      address     => address(11 downto 0),
+      data_a_in   => data_in(5 downto 0),
+      w_enable    => w_enable);
 
   
   -- Tile memory.
@@ -209,7 +222,9 @@ begin
       pixel_x_pos => x_value,
       pixel_y_pos => y_value,
       rgb_in => tilemem_data_out,
-      rgb_out => sprite_rgb_out);      
+      rgb_out => sprite_rgb_out,
+      sprite_x_pos => sprite_x_pos,
+      sprite_y_pos => sprite_y_pos);      
 
 
 -- Connect VGA-port pins.
