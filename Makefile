@@ -53,6 +53,9 @@ berika.%: S=k1k2.vhd
 berika.%: T=k1k2_tb.vhd
 berika.%: U=Nexys3_Master.ucf
 
+roej.%: S=roej.vhd gpu.vhd sprite.vhd counter.vhd mapmem.vhd tilemem.vhd cpu.vhd k1.vhd k2.vhd k3.vhd gp_reg_8.vhd gp_reg_16.vhd micromem.vhd data_reg.vhd alu.vhd constants.vhd
+roej.%: T=
+roej.%: U=gpu.ucf
 
 # Det här är ett exempel på hur man kan skriva en testbänk som är
 # relevant, även om man kör en simulering i batchläge (make batchlab.simc)
