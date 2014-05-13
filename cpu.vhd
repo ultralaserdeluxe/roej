@@ -20,7 +20,7 @@ architecture cpu_ar of cpu is
 			output : out  STD_LOGIC_VECTOR(buswidth-1 downto 0));
 	end component;
 	component gp_reg_16
-	Port (clk,rst,load : in  STD_LOGIC;
+	Port (clk,rst,load,inc,dec : in  STD_LOGIC;
          input : in STD_LOGIC_VECTOR(15 downto 0);
          output : out  STD_LOGIC_VECTOR(15 downto 0));
 	end component;
@@ -38,13 +38,6 @@ architecture cpu_ar of cpu is
 	signal mm_21 : std_logic_vector(buswidth-1 downto 0);
 	signal mm_24 : std_logic_vector(buswidth-1 downto 0);
 	-- DR
-	component data_reg
-		Port ( clk,rst,load,read_signal,write_signal : in  STD_LOGIC;
-			data_bus_input : in STD_LOGIC_VECTOR(buswidth-1 downto 0);
-			data_bus_output : out STD_LOGIC_VECTOR(buswidth-1 downto 0);
-			input : in STD_LOGIC_VECTOR(buswidth-1 downto 0);
-			output : out  STD_LOGIC_VECTOR(buswidth-1 downto 0));
-	end component;
 	signal mm_6 : std_logic_vector(buswidth-1 downto 0);
 	signal mm_7 : std_logic_vector(buswidth-1 downto 0);
 	signal dr_load_connect : std_logic;
@@ -129,7 +122,7 @@ begin  -- cpu_ar
 		input => adr_conc,  
 		output => adr_bus);
 		
-	PC : gp_reg_8 
+	PC : gp_reg_16
 	port map(
 		clk => clk,
 		rst => rst,
@@ -139,7 +132,7 @@ begin  -- cpu_ar
 		input => pc_connect,
 		output => mm_18);
 		
-	XR : gp_reg_8
+	XR : gp_reg_16
 	port map(
 		clk => clk,
 		rst => rst,
@@ -149,7 +142,7 @@ begin  -- cpu_ar
 		input => mm_19,
 		output => mm_20);
 		
-	SP : gp_reg_8 
+	SP : gp_reg_16 
 	port map(
 		clk => clk,
 		rst => rst,
@@ -159,7 +152,7 @@ begin  -- cpu_ar
 		input => mm_21,
 		output => mm_24);
 		
-	DR : gp_reg_8	
+	DR : gp_reg_16	
 	port map(
 		clk => clk,
 		rst => rst,
@@ -169,17 +162,7 @@ begin  -- cpu_ar
 		input => dr_input,
 		output => mm_7);
 		
-		--clk => clk,
-		--rst => rst,
-		--load => dr_load_connect,
-		--data_bus_input => data_bus_in_signal,
-		--data_bus_output => data_bus_out_signal,
-		--read_signal => mm_signal(3),
-		--write_signal => mm_signal(4),
-		--input => mm_6,
-		--output => mm_7);
-		
-    TR : gp_reg_8 
+    TR : gp_reg_16 
 	port map(
 		clk => clk,
 		rst => rst,
@@ -189,7 +172,7 @@ begin  -- cpu_ar
 		input => mm_25,
 		output => mm_26);
 		
-	AR : gp_reg_8 
+	AR : gp_reg_16 
 	port map(
 		clk => clk,
 		rst => rst,
@@ -199,7 +182,7 @@ begin  -- cpu_ar
 		input => ar_connect,
 		output => mm_37);
 		
-	SR : gp_reg_8 
+	SR : gp_reg_16 
 	port map(
 		clk => clk,
 		rst => rst,
@@ -219,7 +202,7 @@ begin  -- cpu_ar
 		input => mpc_connect,
 		output => mm_input);
 		
-	HelpR : gp_reg_8 
+	HelpR : gp_reg_16 
 	port map(
 		clk => clk,
 		rst => rst,
@@ -229,7 +212,7 @@ begin  -- cpu_ar
 		input => mm_38,
 		output => mm_39);
 		
-	IR : gp_reg_8
+	IR : gp_reg_16
 	port map(clk => clk,
 		rst => rst,
 		load => mm_signal(8),
@@ -269,23 +252,11 @@ begin  -- cpu_ar
 		k3_out => mm_14,
 		sr_input => sr_connect);
 		
-	
-	
-	--process(clk)
---	begin
-	--	if rising_edge(clk) then
---			if rst = '1' then
---				mpc_reset <= rst;
---			else
---				mpc_reset <= mm_signal(12);
-	--		end if;
---		end if;
---	end process;
 	mpc_reset <= '1' when rst = '1' else
                mm_signal(12);
-	dr_input <= data_bus_in when mm_signal(3)='1' else
+	dr_input <= "00000000" & data_bus_in when mm_signal(3)='1' else
 				mm_6 when mm_signal(6)='1' else "00000000";
-	 dr_load_connect <= '1' when (mm_signal(5) = '1' or mm_signal(6) = '1') else '0';
+	dr_load_connect <= '1' when (mm_signal(5) = '1' or mm_signal(6) = '1') else '0';
 	adr_conc <= ("00000000" & mm_1);
 	k1_in_connect <= ir_out(buswidth-1 downto 3);
 	k2_in_connect <= ir_out(2 downto 0);
@@ -307,7 +278,7 @@ begin  -- cpu_ar
 				  "00000000";	
 	--from bus mux    (every register has a load-signal that allows bus_signal to be stored)
 	mm_1 <= bus_signal;		-- bus -> ADR
-	mm_6 <= bus_signal;	-- bus -> DR
+	mm_6 <= bus_signal;		-- bus -> DR
 	mm_8 <= bus_signal;		-- bus -> IR
 	mm_13 <= bus_signal;	-- bus -> PC
 	mm_19 <= bus_signal;	-- bus -> XR
@@ -325,4 +296,3 @@ begin  -- cpu_ar
 	data_bus_out <= mm_7;
 	
 end cpu_ar;
---micromem

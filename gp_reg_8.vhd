@@ -5,11 +5,11 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity gp_reg_8 is
   Port ( clk,rst,load,inc,dec : in  STD_LOGIC;
-         input : in STD_LOGIC_VECTOR(buswidth-1 downto 0);
-         output : out  STD_LOGIC_VECTOR(buswidth-1 downto 0));
+         input : in STD_LOGIC_VECTOR(7 downto 0);
+         output : out  STD_LOGIC_VECTOR(7 downto 0));
 end gp_reg_8;
 architecture gp_reg_8_ar of gp_reg_8 is
-	signal reg_value : std_logic_vector(buswidth-1 downto 0);
+	signal reg_value : std_logic_vector(7 downto 0);
 begin  -- gp_reg_8_ar
   process(clk)
   begin

@@ -4,7 +4,7 @@ use work.constants.all;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity gp_reg_16 is
-  Port ( clk,rst,load : in  STD_LOGIC;
+  Port ( clk,rst,load,inc,dec : in  STD_LOGIC;
          input : in STD_LOGIC_VECTOR(adr_buswidth-1 downto 0);
          output : out  STD_LOGIC_VECTOR(adr_buswidth-1 downto 0));
 end gp_reg_16;
@@ -18,6 +18,10 @@ begin  -- gp_reg_16_ar
         value <= "0000000000000000";
       elsif load = '1' then
         value <= input;
+	  elsif inc = '1' then
+        reg_value <= reg_value + '1';
+      elsif dec = '1' then
+        reg_value <= reg_value - '1';
       end if;
     end if;
   end process;
