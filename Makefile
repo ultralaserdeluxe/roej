@@ -37,6 +37,10 @@ counter.%: S=counter.vhd
 counter.%: T=counter_tb.vhd
 counter.%: U=Nexys3_Master.ucf
 
+prng.%: S=prng.vhd counter.vhd
+prng.%: T=prng_tb.vhd
+prng.%: U=
+
 hej.%: S=alu.vhd constant.vhd
 hej.%: T=alu_tb.vhd
 hej.%: U=Nexys3_Master.ucf
