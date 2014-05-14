@@ -62,6 +62,7 @@ ARCHITECTURE behavior OF roej IS
   signal read_signal_connect : std_logic;
   signal write_signal_connect : std_logic;
   signal memory_connect : std_logic_vector(7 downto 0);
+  signal mem_address : std_logic_vector(15 downto 0);
 
   signal write_enable_gpu : std_logic;
   signal gpu_address : std_logic_vector(15 downto 0);  
@@ -86,7 +87,7 @@ BEGIN
   primmem_comp : primmem
   port map(
     clk => clk,
-    adr_bus => adr_bus_connect,
+    adr_bus => mem_address,
     data_bus_in => data_bus_out_connect,
     data_bus_out => memory_connect,
     read_signal => read_signal_connect,
@@ -119,5 +120,7 @@ BEGIN
                       '0';
 
   gpu_address <= adr_bus_connect - 4096;
+
+  mem_address <= adr_bus_connect when conv_integer(adr_bus_connect) <= 4095 else "0000000000000000";
   
 END;
