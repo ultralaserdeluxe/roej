@@ -55,6 +55,13 @@ ARCHITECTURE behavior OF roej IS
     sprite_x_pos : in std_logic_vector(9 downto 0);
     sprite_y_pos : in std_logic_vector(9 downto 0));
   end component;
+
+  component prng
+    port (
+      clk   : in  std_logic;
+      rst   : in  std_logic;
+      value : out std_logic_vector(7 downto 0));
+  end component;
   
   signal adr_bus_connect : std_logic_vector(adr_buswidth-1 downto 0);
   signal data_bus_out_connect : std_logic_vector(7 downto 0);
@@ -70,6 +77,7 @@ ARCHITECTURE behavior OF roej IS
   signal sprite_x_pos : std_logic_vector(9 downto 0) := "0000100000";
   signal sprite_y_pos : std_logic_vector(9 downto 0) := "0000100000";
 
+  signal prng_value : std_logic_vector(7 downto 0);
     
 BEGIN
 
@@ -107,7 +115,15 @@ BEGIN
       sprite_x_pos => sprite_x_pos,
       sprite_y_pos => sprite_y_pos);
 
-  data_bus_in_connect <= memory_connect when conv_integer(adr_bus_connect) <= 4095 else "00000000";
+  prng_comp : prng
+    port map (
+      clk   => clk,
+      rst   => rst,
+      value => prng_value);
+
+  data_bus_in_connect <= memory_connect when conv_integer(adr_bus_connect) <= 4095 else
+                         prng_value when conv_integer(adr_bus_connect) = 8193 else
+                         "00000000";
 
   write_enable_mem <= '1' when (conv_integer(adr_bus_connect) <= 4095 and
                                 write_signal_connect = '1') else
