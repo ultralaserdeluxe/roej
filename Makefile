@@ -49,12 +49,12 @@ ps2.%: S=ps2.vhd counter.vhd
 ps2.%: T=
 ps2.%: U=ps2.ucf
 
-berika.%: S=k1k2.vhd
-berika.%: T=k1k2_tb.vhd
-berika.%: U=Nexys3_Master.ucf
+cpu.%: S= cpu.vhd k1.vhd k2.vhd k3.vhd gp_reg_8.vhd gp_reg_16.vhd micromem.vhd data_reg.vhd alu.vhd primmem.vhd constants.vhd
+cpu.%: T=cpu_tb.vhd
+cpu.%: U=Nexys3_Master.ucf
 
-roej.%: S=roej.vhd gpu.vhd sprite.vhd counter.vhd mapmem.vhd tilemem.vhd cpu.vhd k1.vhd k2.vhd k3.vhd gp_reg_8.vhd gp_reg_16.vhd micromem.vhd data_reg.vhd alu.vhd constants.vhd
-roej.%: T=
+roej.%: S=roej.vhd gpu.vhd sprite.vhd counter.vhd mapmem.vhd tilemem.vhd cpu.vhd k1.vhd k2.vhd k3.vhd gp_reg_8.vhd gp_reg_16.vhd micromem.vhd data_reg.vhd alu.vhd primmem.vhd constants.vhd
+roej.%: T=roej_tb.vhd
 roej.%: U=gpu.ucf
 
 # Det här är ett exempel på hur man kan skriva en testbänk som är

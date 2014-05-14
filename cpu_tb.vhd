@@ -14,8 +14,8 @@ ARCHITECTURE behavior OF cpu_tb IS
     clk : in std_logic;
     rst : in std_logic;
     adr_bus : out std_logic_vector(adr_buswidth-1 downto 0);
-	data_bus_out : out std_logic_vector(buswidth-1 downto 0);
-	data_bus_in : in std_logic_vector(buswidth-1 downto 0);
+	data_bus_out : out std_logic_vector(7 downto 0);
+	data_bus_in : in std_logic_vector(7 downto 0);
 	read_signal : out std_logic;
 	write_signal : out std_logic);
   end component;
@@ -24,8 +24,8 @@ ARCHITECTURE behavior OF cpu_tb IS
   port(
 	 clk : in std_logic;
 	 adr_bus : in std_logic_vector(15 downto 0);
-	 data_bus_in : in std_logic_vector(buswidth-1 downto 0);
-	 data_bus_out : out std_logic_vector(buswidth-1 downto 0);
+	 data_bus_in : in std_logic_vector(7 downto 0);
+	 data_bus_out : out std_logic_vector(7 downto 0);
 	 read_signal : in std_logic;
 	 write_signal : in std_logic);
   end component;
@@ -33,8 +33,8 @@ ARCHITECTURE behavior OF cpu_tb IS
   signal clk : std_logic := '0';
   signal rst : std_logic := '0';
   signal adr_bus_connect : std_logic_vector(adr_buswidth-1 downto 0);
-  signal data_bus_out_connect : std_logic_vector(buswidth-1 downto 0);
-  signal data_bus_in_connect : std_logic_vector(buswidth-1 downto 0);
+  signal data_bus_out_connect : std_logic_vector(7 downto 0);
+  signal data_bus_in_connect : std_logic_vector(7 downto 0);
   signal read_signal_connect : std_logic;
   signal write_signal_connect : std_logic;
   signal tb_running : boolean := true;
