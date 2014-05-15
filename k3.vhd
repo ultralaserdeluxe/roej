@@ -13,7 +13,7 @@ end k3;
 architecture k3_ar of k3 is
 begin
   k3_out <= input when mm_signal(14)='1' and 
-            ((sr_input(7)='1' and mm_signal(15)='1') or
-             (sr_input(6)='1' and mm_signal(16)='1')) else pc_input;	  	-- k3 output
+            ((sr_input(6)='1' and mm_signal(15)='1') or
+             (sr_input(7)='1' and mm_signal(16)='1')) else pc_input;	  	-- k3 output
   
 end k3_ar;
