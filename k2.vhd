@@ -10,12 +10,12 @@ end k2;
 architecture k2_ar of k2 is
 begin
   
-  k2_out <= "00001010" when k2_in = "000" else 	-- absolut
-            "00010100" when k2_in = "001" else 	-- indirekt
-            "00100000" when k2_in = "010" else 	-- indexerad
-            "00101101" when k2_in = "011" else 	-- relativ
-            "00111010" when k2_in = "100" else 	-- omedelbar
-            "01000001" when k2_in = "101" else 	-- underförstådd
+  k2_out <= "00000101" when k2_in = "000" else 	-- absolut
+            "00001111" when k2_in = "001" else 	-- indirekt
+            "00011100" when k2_in = "010" else 	-- indexerad
+            "00101000" when k2_in = "011" else 	-- relativ
+            "00110101" when k2_in = "100" else 	-- omedelbar
+            "00110111" when k2_in = "101" else 	-- underförstådd
             "00000000";
   
 end k2_ar;

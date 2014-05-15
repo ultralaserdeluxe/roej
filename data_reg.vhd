@@ -10,16 +10,16 @@ entity data_reg is
 end data_reg;
 architecture data_reg_ar of data_reg is
 	signal reg_value : std_logic_vector(adr_buswidth-1 downto 0);
-begin  -- data_reg_ar
+begin
   process(clk)
   begin
     if rising_edge(clk) then
       if rst = '1' then
         reg_value <= "0000000000000000";
-      elsif load = '1' then
-        reg_value(7 downto 0) <= input(7 downto 0);
-      elsif double_read_signal = '1' then
-        reg_value(15 downto 8) <= reg_value(7 downto 0);
+      elsif load = '1' and double_read_signal = '0' then
+        reg_value <= input;
+      elsif double_read_signal = '1' and load = '1' then
+        reg_value <= reg_value(7 downto 0) & input(7 downto 0);
       end if;
     end if;
   end process;

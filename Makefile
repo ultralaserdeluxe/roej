@@ -37,6 +37,10 @@ counter.%: S=counter.vhd
 counter.%: T=counter_tb.vhd
 counter.%: U=Nexys3_Master.ucf
 
+prng.%: S=prng.vhd counter.vhd
+prng.%: T=prng_tb.vhd
+prng.%: U=
+
 hej.%: S=alu.vhd constant.vhd
 hej.%: T=alu_tb.vhd
 hej.%: U=Nexys3_Master.ucf
@@ -53,7 +57,7 @@ cpu.%: S= cpu.vhd k1.vhd k2.vhd k3.vhd gp_reg_8.vhd gp_reg_16.vhd micromem.vhd d
 cpu.%: T=cpu_tb.vhd
 cpu.%: U=Nexys3_Master.ucf
 
-roej.%: S=roej.vhd gpu.vhd sprite.vhd counter.vhd mapmem.vhd tilemem.vhd cpu.vhd k1.vhd k2.vhd k3.vhd gp_reg_8.vhd gp_reg_16.vhd micromem.vhd data_reg.vhd alu.vhd primmem.vhd constants.vhd
+roej.%: S=roej.vhd prng.vhd gpu.vhd sprite.vhd counter.vhd mapmem.vhd tilemem.vhd cpu.vhd k1.vhd k2.vhd k3.vhd gp_reg_8.vhd gp_reg_16.vhd micromem.vhd data_reg.vhd alu.vhd primmem.vhd constants.vhd
 roej.%: T=roej_tb.vhd
 roej.%: U=gpu.ucf
 
