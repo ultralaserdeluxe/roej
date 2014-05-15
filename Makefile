@@ -61,6 +61,10 @@ roej.%: S=roej.vhd prng.vhd gpu.vhd sprite.vhd counter.vhd mapmem.vhd tilemem.vh
 roej.%: T=roej_tb.vhd
 roej.%: U=gpu.ucf
 
+berika.%: S=realtime_counter.vhd counter.vhd
+berika.%: T=realtime_counter_tb.vhd
+berika.%: U=gpu.ucf
+
 # Det här är ett exempel på hur man kan skriva en testbänk som är
 # relevant, även om man kör en simulering i batchläge (make batchlab.simc)
 # batchlab.%: S=lab.vhd leddriver.vhd
