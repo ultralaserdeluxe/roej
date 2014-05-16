@@ -62,6 +62,16 @@ ARCHITECTURE behavior OF roej IS
       rst   : in  std_logic;
       value : out std_logic_vector(7 downto 0));
   end component;
+
+  component realtime_counter
+    port(
+    clk : in std_logic;
+    reset : in std_logic;
+    enable : in std_logic;
+    single_out : out std_logic_vector (7 downto 0);
+    ten_out : out std_logic_vector(7 downto 0);
+    hundred_out : out std_logic_vector(7 downto 0));
+  end component;
   
   signal adr_bus_connect : std_logic_vector(adr_buswidth-1 downto 0);
   signal data_bus_out_connect : std_logic_vector(7 downto 0);
@@ -79,7 +89,11 @@ ARCHITECTURE behavior OF roej IS
   signal sprite_y_pos : std_logic_vector(9 downto 0) := "0000100000";
 
   signal prng_value : std_logic_vector(7 downto 0);
-    
+
+  signal single_value : std_logic_vector(7 downto 0);
+  signal ten_value : std_logic_vector(7 downto 0);
+  signal hundred_value : std_logic_vector(7 downto 0); 
+  
 BEGIN
 
   cpu_comp : cpu
@@ -122,8 +136,20 @@ BEGIN
       rst   => rst,
       value => prng_value);
 
+  timer : realtime_counter
+    port map (
+      clk => clk,
+      reset => rst,
+      enable => '1',
+      single_out => single_value,
+      ten_out => ten_value,
+      hundred_out => hundred_value);
+    
   data_bus_in_connect <= memory_connect when conv_integer(adr_bus_connect) <= 4095 else
                          prng_value when conv_integer(adr_bus_connect) = 8193 else
+                         single_value when conv_integer(adr_bus_connect) = 8198 else
+                         ten_value when conv_integer(adr_bus_connect) = 8199 else
+                         hundred_value when conv_integer(adr_bus_connect) = 8200 else
                          "00000000";
 
   write_enable_mem <= '1' when (conv_integer(adr_bus_connect) <= 4095 and
