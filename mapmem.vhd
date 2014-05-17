@@ -17,8 +17,8 @@ end mapmem;
     
 architecture mapmem_behv of mapmem is
 
-  type mapmem_t is array (0 to 4096) of std_logic_vector(5 downto 0);
-  signal mapmem : mapmem_t := (others => "001010");
+  type mapmem_t is array (0 to 4095) of std_logic_vector(7 downto 0);
+  signal mapmem : mapmem_t := (others => "00111111");
 
 begin
 
@@ -26,9 +26,9 @@ begin
   begin
     if rising_edge(clk) then
       if w_enable = '1' then
-        mapmem(conv_integer(address)) <= data_a_in;
+        mapmem(conv_integer(address)) <= "00" & data_a_in;
       end if;
-      data_a_out <= mapmem(conv_integer(addr_a_row) * 64 + conv_integer(addr_a_col));
+      data_a_out <= mapmem(conv_integer(addr_a_row) * 64 + conv_integer(addr_a_col))(5 downto 0);
     end if;
   end process;
   

@@ -92,8 +92,10 @@ ARCHITECTURE behavior OF roej IS
 
   signal single_value : std_logic_vector(7 downto 0);
   signal ten_value : std_logic_vector(7 downto 0);
-  signal hundred_value : std_logic_vector(7 downto 0); 
-  
+  signal hundred_value : std_logic_vector(7 downto 0);
+
+  signal vsync_connect : std_logic;
+
 BEGIN
 
   cpu_comp : cpu
@@ -123,12 +125,14 @@ BEGIN
       vgaGreen => vgaGreen,
       vgaBlue => vgaBlue,
       Hsync => Hsync,
-      Vsync => Vsync,
+      Vsync => vsync_connect,
       address => gpu_address,
       data_in => data_bus_out_connect,
       w_enable => write_enable_gpu,
       sprite_x_pos => sprite_x_pos,
       sprite_y_pos => sprite_y_pos);
+
+  Vsync <= vsync_connect;
 
   prng_comp : prng
     port map (
@@ -150,6 +154,7 @@ BEGIN
                          single_value when conv_integer(adr_bus_connect) = 8198 else
                          ten_value when conv_integer(adr_bus_connect) = 8199 else
                          hundred_value when conv_integer(adr_bus_connect) = 8200 else
+                         "0000000" & vsync_connect when conv_integer(adr_bus_connect) = 8201 else
                          "00000000";
 
   write_enable_mem <= '1' when (conv_integer(adr_bus_connect) <= 4095 and
@@ -164,5 +169,5 @@ BEGIN
   gpu_address <= adr_bus_connect - 4096;
 
   mem_address <= adr_bus_connect when conv_integer(adr_bus_connect) <= 4095 else "0000000000000000";
-  
+
 END;

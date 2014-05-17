@@ -42,8 +42,9 @@ architecture ps2_behv of ps2 is
 
   type state_type is (init, set_clock_low, set_data_low, release_clk,
                       send_bit, wait_clk_high_tx, wait_clk_low_tx, wait_clk_high_ack,
-                      wait_clk_low_ack, wait_clk_rel_ack,
-                      wait_clk_low_rx, wait_clk_high_rx, get_bit, rx_done);
+                      wait_clk_low_ack, wait_clk_rel_ack, wait_clk_low_ack_command,
+                      get_ack_command_bit, wait_clk_high_ack_command,
+                      wait_clk_low_rx, wait_clk_high_rx, get_bit, rx_done, rx_done_2);
   signal state : state_type := init;
 
   -- 500 us delay counter
@@ -74,6 +75,10 @@ architecture ps2_behv of ps2 is
 
   signal mouse_data_packet : std_logic_vector(32 downto 0) := "000000000000000000000000000000000";
   signal mouse_data_counter : std_logic_vector(5 downto 0) := "000000";
+  signal command_ack_packet : std_logic_vector(10 downto 0);
+
+  signal num_clicks : std_logic_vector(1 downto 0) := "00";
+  signal mouse_clicks : std_logic_vector(1 downto 0) := "00";
   
 begin
 
@@ -101,8 +106,8 @@ begin
   
   -- Leds.
 
-  led(0) <= data_in;
-  led(1) <= clk_in;
+  --led(0) <= data_in;
+  led(0) <= clk_in;
 
   
   -- State machine.
@@ -120,16 +125,21 @@ begin
       data_enable <= '0';
       
       if state = init then
-        led(2 to 5) <= "0000";
+        led(1 to 5) <= "00000";
 
         clk_enable <= '0';
         data_enable <= '0';
+
+        num_clicks <= "00";
+        mouse_data_counter <= (others => '0');
+        mouse_data_packet <= (others => '0');
+        command_ack_packet <= (others => '0');
 
         delay_500_enable <= '1';
         delay_500_reset <= '0';
 
       elsif state = set_clock_low then
-        led(2 to 5) <= "0001";
+        led(1 to 5) <= "00001";
         
         clk_enable <= '1';
         clk_out <= '0';
@@ -138,7 +148,7 @@ begin
         delay_200_reset <= '0';
 
       elsif state = set_data_low then
-        led(2 to 5) <= "0010";
+        led(1 to 5) <= "00010";
 
         clk_enable <= '1';
         clk_out <= '0';
@@ -149,14 +159,14 @@ begin
         delay_15_reset <= '0';
 
       elsif state = release_clk then
-        led(2 to 5) <= "0011";
+        led(1 to 5) <= "00011";
 
         clk_enable <= '0';
         data_enable <= '1';
         data_out <= '0';
 
       elsif state = send_bit then
-        led(2 to 5) <= "0100";
+        led(1 to 5) <= "00100";
 
         data_enable <= '1';        
         data_out <= command(0);
@@ -164,42 +174,55 @@ begin
         bit_counter <= bit_counter + 1;
 
       elsif state = wait_clk_high_tx then
-        led(2 to 5) <= "0101";
+        led(1 to 5) <= "00101";
 
         data_enable <= '1';
         
       elsif state = wait_clk_low_tx then
-        led(2 to 5) <= "0110";
+        led(1 to 5) <= "00110";
 
         data_enable <= '1';
 
       elsif state = wait_clk_high_ack then
-        led(2 to 5) <= "0111";
+        led(1 to 5) <= "00111";
 
       elsif state = wait_clk_low_ack then
-        led(2 to 5) <= "1000";
+        led(1 to 5) <= "01000";
 
       elsif state = wait_clk_rel_ack then
-        led(2 to 5) <= "1001";
+        led(1 to 5) <= "01001";
+
+      elsif state = wait_clk_low_ack_command then
+        led(1 to 5) <= "01010";
+
+      elsif state = get_ack_command_bit then
+        led(1 to 5) <= "01011";
+
+        command_ack_packet <= data_in & command_ack_packet(10 downto 1);
+
+      elsif state = wait_clk_high_ack_command then
+        led(1 to 5) <= "01100";
 
       elsif state = wait_clk_low_rx then
-        led(2 to 5) <= "1011";
+        led(1 to 5) <= "01101";
 
       elsif state = wait_clk_high_rx then
-        led(2 to 5) <= "1100";
+        led(1 to 5) <= "01110";
 
       elsif state = get_bit then
-        led(2 to 5) <= "1101";
+        led(1 to 5) <= "01111";
 
         mouse_data_packet <= data_in & mouse_data_packet(32 downto 1);
         mouse_data_counter <= mouse_data_counter + 1;
 
       elsif state = rx_done then
-        led(2 to 5) <= "1110";
+        led(1 to 5) <= "10000";
+
+        mouse_data_counter <= (others => '0');
 
         led(6) <= mouse_data_packet(1);
         led(7) <= mouse_data_packet(2);
-        
+
       end if;
     end if;
   end process;
@@ -242,7 +265,20 @@ begin
         state <= wait_clk_rel_ack;
 
       elsif state = wait_clk_rel_ack and clk_rise = '1' then
-        state <= wait_clk_low_rx;        
+        state <= wait_clk_low_ack_command;
+
+      elsif state = wait_clk_low_ack_command and clk_fall = '1' then
+        state <= get_ack_command_bit;
+
+      elsif state = get_ack_command_bit then
+        if command_ack_packet = "10111101000" then
+          state <= wait_clk_low_rx;
+        else
+          state <= wait_clk_high_ack_command;
+        end if;
+
+      elsif state = wait_clk_high_ack_command and clk_rise = '1' then
+        state <= wait_clk_low_ack_command;        
 
       elsif state = wait_clk_low_rx and clk_fall = '1' then
         state <= get_bit;
@@ -251,7 +287,7 @@ begin
         state <= wait_clk_low_rx;
 
       elsif state = get_bit then
-        if mouse_data_counter <= "100001" then
+        if mouse_data_counter = "100001" then
           state <= rx_done;
         else
           state <= wait_clk_high_rx;
