@@ -38,9 +38,10 @@ begin
             "10101010" when k1_in = "11001" else  -- ASL
             "10101111" when k1_in = "11010" else  -- AND
             "10110100" when k1_in = "11011" else  -- CMP
-            "10111001" when k1_in = "11100" else  -- LDA16
+            "10111001" when k1_in = "11100" else  -- LDA16OMEDELBAR
             "11000011" when k1_in = "11101" else  -- STA16
             "11010010" when k1_in = "11110" else  -- ADDA16
+            "11011011" when k1_in = "11111" else  --LDA16ABSOLUT
             "00000000";
 
 end k1_ar;
