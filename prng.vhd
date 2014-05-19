@@ -7,6 +7,7 @@ entity prng is
   port (
     clk   : in  std_logic;
     rst   : in  std_logic;
+    next_value : in std_logic;
     value : out std_logic_vector(7 downto 0));
   
 end prng;
@@ -23,14 +24,14 @@ architecture prng_ar of prng is
       value  : out std_logic_vector(n - 1 downto 0));
   end component;
 
-  signal counter_value : std_logic_vector(7 downto 0);
-  signal reg_value : std_logic_vector(7 downto 0);
+  signal counter_value : std_logic_vector(63 downto 0);
+  signal reg_value : std_logic_vector(63 downto 0);
   
 begin
 
   cnt : counter
     generic map (
-      n => 8)
+      n => 64)
     port map (
       clk    => clk,
       reset  => '0',
@@ -42,13 +43,13 @@ begin
       if rising_edge(clk) then
         if rst = '1' then
           reg_value <= counter_value;
-        else
-          reg_value(7) <= (reg_value(0) xor reg_value(1)) xor reg_value(3);
-          reg_value(6 downto 0) <= reg_value(7 downto 1);
+        elsif next_value = '1' then
+          reg_value(63) <= ((reg_value(7) xor reg_value(1)) xor reg_value(3)) xor reg_value(13);
+          reg_value(62 downto 0) <= reg_value(63 downto 1);
         end if;
       end if;
     end process;
 
-    value <= reg_value;
+    value <= reg_value(7 downto 0);
   
 end prng_ar;
