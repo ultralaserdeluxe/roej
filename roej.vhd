@@ -136,7 +136,7 @@ BEGIN
 
   prng_comp : prng
     port map (
-      clk   => clk,
+      clk   => read_signal_connect,
       rst   => rst,
       value => prng_value);
 
