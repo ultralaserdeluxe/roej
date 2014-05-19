@@ -10,19 +10,19 @@ end k1;
 architecture k1_ar of k1 is
 begin
   
-  k1_out <= "00111000" when k1_in = "00000" else  -- LDA
-            "00111100" when k1_in = "00001" else  -- STA
-            "00111110" when k1_in = "00010" else  -- ADDA
-            "01000010" when k1_in = "00011" else  -- SUBA
-            "01000110" when k1_in = "00100" else  -- INCA
-            "01001000" when k1_in = "00101" else  -- DECA
-            "01001010" when k1_in = "00110" else  -- LDX
-            "01001100" when k1_in = "00111" else  -- STX
-            "01001110" when k1_in = "01000" else  -- INX
-            "01010011" when k1_in = "01001" else  -- DEX
-            "01011000" when k1_in = "01010" else  -- LDS
-            "01011010" when k1_in = "01011" else  -- STS
-            "01011100" when k1_in = "01100" else  -- INS
+  k1_out <= "00111001" when k1_in = "00000" else  -- LDA
+            "00111101" when k1_in = "00001" else  -- STA
+            "00111111" when k1_in = "00010" else  -- ADDA
+            "01000011" when k1_in = "00011" else  -- SUBA
+            "01000111" when k1_in = "00100" else  -- INCA
+            "01001001" when k1_in = "00101" else  -- DECA
+            "01001011" when k1_in = "00110" else  -- LDX
+            "01001101" when k1_in = "00111" else  -- STX
+            "01001111" when k1_in = "01000" else  -- INX
+            "01010100" when k1_in = "01001" else  -- DEX
+            "01011001" when k1_in = "01010" else  -- LDS
+            "01011011" when k1_in = "01011" else  -- STS
+            "01011101" when k1_in = "01100" else  -- INS
             "01100001" when k1_in = "01101" else  -- DES
             "01100111" when k1_in = "01110" else  -- PUSH
             "01101111" when k1_in = "01111" else  -- PULL
@@ -34,14 +34,15 @@ begin
             "10011001" when k1_in = "10101" else  -- HH
             "10011011" when k1_in = "10110" else  -- LSR
             "10100000" when k1_in = "10111" else  -- LSL
-            "10100101" when k1_in = "11000" else  -- ASR
+            --"10100101" when k1_in = "11000" else  -- ASR
             "10101010" when k1_in = "11001" else  -- ASL
             "10101111" when k1_in = "11010" else  -- AND
             "10110100" when k1_in = "11011" else  -- CMP
             "10111001" when k1_in = "11100" else  -- LDA16OMEDELBAR
-            "11000011" when k1_in = "11101" else  -- STA16
-            "11010010" when k1_in = "11110" else  -- ADDA16
-            "11011011" when k1_in = "11111" else  --LDA16ABSOLUT
+            "11000011" when k1_in = "11101" else  -- STA16ABSOLUT(INDIREKT)
+            "11010010" when k1_in = "11110" else  -- ADDA16OMEDELBAR
+            "11011011" when k1_in = "11111" else  -- LDA16ABSOLUT(IDNIREKT)
+            "11100100" when k1_in = "11000" else  -- ADD16ABSOLUT
             "00000000";
 
 end k1_ar;
