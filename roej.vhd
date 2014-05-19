@@ -60,6 +60,7 @@ ARCHITECTURE behavior OF roej IS
     port (
       clk   : in  std_logic;
       rst   : in  std_logic;
+      next_value : in std_logic;
       value : out std_logic_vector(7 downto 0));
   end component;
 
@@ -136,8 +137,9 @@ BEGIN
 
   prng_comp : prng
     port map (
-      clk   => read_signal_connect,
+      clk   => clk,
       rst   => rst,
+      next_value => read_signal_connect,
       value => prng_value);
 
   timer : realtime_counter

@@ -11,11 +11,13 @@ architecture prng_tb_behv of prng_tb is
   port(
     clk : in std_logic;
     rst : in std_logic;
+    next_value : in std_logic;
     value : out std_logic_vector(7 downto 0));
   end component;
 
   signal clk : std_logic := '0';
   signal rst : std_logic := '0';
+  signal next_value : std_logic := '0';
   signal value : std_logic_vector(7 downto 0);
   signal tb_running : boolean := true;
   
@@ -25,6 +27,7 @@ begin  -- prng_tb_behv
     port map (
       clk   => clk,
       rst   => rst,
+      next_value => next_value,
       value => value);
 
   clk_gen : process
@@ -48,11 +51,11 @@ begin  -- prng_tb_behv
     wait for 100 ns;
     wait until rising_edge(clk);
 
-    rst <= '1';
+    next_value <= '0';
     wait for 100 ns;
     wait until rising_edge(clk);
 
-    rst <= '0';
+    next_value <= '1';
     wait for 100 ns;
     wait until rising_edge(clk);
   
