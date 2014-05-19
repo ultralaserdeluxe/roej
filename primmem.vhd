@@ -173,7 +173,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001011", "10111010",                 -- $3002
 "11011100",                             -- CMP
 "00000010",                             -- #2
-                    RESET X-TILLÄG till -1 SAMMA GÄLLER inte Y (antagligen)
+                   -- RESET X-TILLÄG till -1 SAMMA GÄLLER inte Y (antagligen)
 "10010011",                             -- JMPZ nästa y
 "00000000", "00000100",                 -- 4
 "10000011",                             --JMP x_bound
@@ -189,8 +189,9 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00100000",                             -- #32
 "10010011",                             -- JMPZ 
 "11111111", "10001101",                 -- -115
-"10000011",                             -- JMP
-"11111111", "10110101",                 -- -75
+"10000011",                             -- JMP (y-bounds)
+--"11111111", "10110101",                 -- -75
+"11111111", "10010111",                 -- -105
 
 
 -- Rita spelplan.
