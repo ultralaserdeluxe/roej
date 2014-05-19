@@ -17,6 +17,11 @@ architecture primmem_behv of primmem is
 
 type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
   signal primmem : primmem_type := (
+-- Sätt stackpekare.
+    
+"01010100",                             -- LDS
+"00001111", "11111111",                 -- #4095
+    
 -- Initialisera spelplan.
     
 "00000100",                             -- LDA omedelbar
@@ -98,7 +103,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10010011",                             -- JMPZ
 "00000000", "00001000",
 "01001101",                             -- DEX
-"10001011",                             -- JMPN
+"10001011",                             -- JMPN SLUT
 "00000000", "01110100",
 "10000011",                             -- JMP början
 "11111111", "11110000",
@@ -173,7 +178,6 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001011", "10111010",                 -- $3002
 "11011100",                             -- CMP
 "00000010",                             -- #2
-                   -- RESET X-TILLÄG till -1 SAMMA GÄLLER inte Y (antagligen)
 "10010011",                             -- JMPZ nästa y
 "00000000", "00000100",                 -- 4
 "10000011",                             -- JMP x_bound
@@ -190,8 +194,14 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10010011",                             -- JMPZ 
 "11111111", "10001101",                 -- -115
 "10000011",                             -- JMP (y-bounds)
---"11111111", "10110101",                 -- -75
 "11111111", "10010111",                 -- -105
+
+-- Main loop.
+
+"10011011",                              -- JSR omedelbar
+"00000000", "00000100",
+"10000011",                             -- JMP
+"11111111", "11111011",                 -- -5
 
 
 -- Rita spelplan.
@@ -274,7 +284,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00000000", "00000100",
 "10000011",                             -- JMP relativ
 "11111111", "10110001",
-
+"10100101",                             -- RTS
 "10101101",                             -- HH
 others => "00000000"
 );

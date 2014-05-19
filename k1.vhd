@@ -21,8 +21,8 @@ begin
             "01001111" when k1_in = "01000" else  -- INX
             "01010100" when k1_in = "01001" else  -- DEX
             "01011001" when k1_in = "01010" else  -- LDS
-            "01011011" when k1_in = "01011" else  -- STS
-            "01011101" when k1_in = "01100" else  -- INS
+            "01011110" when k1_in = "01011" else  -- STS
+            "01100000" when k1_in = "01100" else  -- INS
             "01100001" when k1_in = "01101" else  -- DES
             "01100111" when k1_in = "01110" else  -- PUSH
             "01101111" when k1_in = "01111" else  -- PULL
@@ -30,10 +30,10 @@ begin
             "01111111" when k1_in = "10001" else  -- JMPN
             "10000101" when k1_in = "10010" else  -- JMPZ
             "10001011" when k1_in = "10011" else  -- JSR
-            "10010010" when k1_in = "10100" else  -- RTS
-            "10011001" when k1_in = "10101" else  -- HH
-            "10011011" when k1_in = "10110" else  -- LSR
-            "10100000" when k1_in = "10111" else  -- LSL
+            "10011001" when k1_in = "10100" else  -- RTS
+            "11111111" when k1_in = "10101" else  -- HH
+            "10100001" when k1_in = "10110" else  -- LSR
+            "10100011" when k1_in = "10111" else  -- LSL
             --"10100101" when k1_in = "11000" else  -- ASR
             "10101010" when k1_in = "11001" else  -- ASL
             "10101111" when k1_in = "11010" else  -- AND
