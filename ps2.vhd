@@ -8,7 +8,8 @@ entity ps2 is
     clk : in std_logic;
     rst : in std_logic;
     ja : inout std_logic_vector(0 to 7);
-    led : out std_logic_vector(0 to 7));
+    led : out std_logic_vector(0 to 7);
+    x_position   : out std_logic_vector(9 downto 0));
   
 end ps2;
     
@@ -44,7 +45,7 @@ architecture ps2_behv of ps2 is
 
   type state_type is (init, set_clock_low, set_data_low, release_clk,
                       wait_clk_low_1, send_bit, wait_clk_high, wait_clk_low_2,
-                      done, wait_clk_high_2, wait_clk_low_3);
+                      done, wait_clk_high_2, wait_clk_low_3, wait_half_second);
   signal state : state_type := init;
 
   constant delay_500_us : std_logic_vector(15 downto 0) := "1100001101010000";
@@ -61,6 +62,11 @@ architecture ps2_behv of ps2 is
 
   signal mouse_data_packet : std_logic_vector(32 downto 0) := "000000000000000000000000000000000";
   signal mouse_data_counter : std_logic_vector(5 downto 0) := "000000";
+
+  signal data_read  : std_logic_vector(1 downto 0) := "01";
+  signal click : std_logic_vector(7 downto 0) := "00000000";
+  signal half_second_counter : std_logic_vector(31 downto 0);
+  signal xpos : std_logic_vector(9 downto 0) := "0000000000";
   
 begin
 
@@ -92,9 +98,11 @@ begin
 
   led(0) <= data_in;
   led(1) <= clk_in;
-  led(6) <= mouse_data_packet(1);
-  led(7) <= mouse_data_packet(2);
-
+  led(6) <= click(7);
+  led(7) <= click(0);
+  --led(6) <= mouse_data_packet(1);
+  --led(7) <= mouse_data_packet(2);
+  
   
   -- State machine.
 
@@ -119,6 +127,11 @@ begin
 
         clk_enable <= '0';
         data_enable <= '0';
+
+        data_read <= "01";
+        click <= (others => '0');
+        mouse_data_packet <= (others => '0');
+        half_second_counter <= (others => '0');
 
         delay_enable <= '1';
         delay_reset <= '0';
@@ -185,10 +198,20 @@ begin
       elsif state = wait_clk_low_2 then
         if clk_fall = '1' then
           if bit_counter = "1010" then
-            state <= done;
+            state <= wait_half_second;
+            clk_enable <= '0';
+            data_enable <= '0';
           else
             state <= send_bit;
           end if;
+        end if;
+
+      elsif state = wait_half_second then
+        led(2 to 5) <= "1001";
+        if half_second_counter = "00000101111101011110000100000000" then
+          state <= wait_clk_high_2;
+        else
+          half_second_counter <= half_second_counter + 1;
         end if;
 
       elsif state = done then
@@ -197,12 +220,24 @@ begin
         clk_enable <= '0';
         data_enable <= '0';
 
+        if data_read = "00" then
+          data_read <= "01";
+        elsif data_read = "01" then
+          click <= mouse_data_packet(1) & "000000" & mouse_data_packet(2);
+          data_read <= "10";
+        else
+          data_read <= "10";
+        end if;
+
+        xpos <= xpos + mouse_data_packet(5);
+        mouse_data_packet <= (others => '0');
+
         state <= wait_clk_high_2;
 
       elsif state = wait_clk_high_2 then
         led(2 to 5) <= "0111";
 
-        if clk_rise = '1' then
+        if clk_fall = '1' then
           mouse_data_packet <= data_sync_reg(3) & mouse_data_packet(32 downto 1);
           mouse_data_counter <= mouse_data_counter + 1;
           state <= wait_clk_low_3;
@@ -211,7 +246,7 @@ begin
       elsif state = wait_clk_low_3 then
         led(2 to 5) <= "1000";
 
-        if clk_fall = '1' then
+        if clk_rise = '1' then
           if mouse_data_counter = "100001" then
             state <= done;
             mouse_data_counter <= "000000";
@@ -223,5 +258,8 @@ begin
       end if;
     end if;
   end process;
+
+
+  x_position <= xpos;
 
 end ps2_behv;
