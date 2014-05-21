@@ -16,6 +16,7 @@ begin
             "00101010" when k2_in = "011" else 	-- relativ
             "00110110" when k2_in = "100" else 	-- omedelbar
             "00111000" when k2_in = "101" else 	-- underförstådd
-            "00000000";
+            "00000000" when k2_in = "110" else  -- NOP
+            "11111111";                         -- HALT
   
 end k2_ar;
