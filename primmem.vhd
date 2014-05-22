@@ -38,22 +38,22 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001100", "00011010",                 -- $3098
 
 
--- Ladda x- samt y-postioner 13
--- test
--- xpos
-"00000100",                             -- LDA omedelbar
-"00001100",                             -- #12
-"00001000",                             -- STA absolut
-"00001100", "00011001",                 -- #3097
--- ypos 18
-"00000100",                             -- LDA omedelbar
-"00001111",                             -- #15
-"00001000",                             -- STA absolut
-"00001100", "00011000",                 -- #3096
-"00000100",                             -- LDA omedelbar
-"10000000",                             -- #128
-"00001000",                             -- STA absolut
-"00001100", "00010111",                 -- #3095
+---- Ladda x- samt y-postioner 13
+---- test
+---- xpos
+--"00000100",                             -- LDA omedelbar
+--"00001100",                             -- #12
+--"00001000",                             -- STA absolut
+--"00001100", "00011001",                 -- #3097
+---- ypos 18
+--"00000100",                             -- LDA omedelbar
+--"00001111",                             -- #15
+--"00001000",                             -- STA absolut
+--"00001100", "00011000",                 -- #3096
+--"00000100",                             -- LDA omedelbar
+--"10000000",                             -- #128
+--"00001000",                             -- STA absolut
+--"00001100", "00010111",                 -- #3095
 
 
 -- Initialisera spelplan. 28
@@ -401,12 +401,12 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 
 -- Spara xpos
 "00000000",                             -- LDA absolut
-"00001100", "00011001",                 -- $3097
+"00100000", "00000011",                 -- $8195
 "00001000",                             -- STA absolut
 "00001011", "10111000",                 -- $3000
 -- Spara ypos 412
 "00000000",                             -- LDA absolut
-"00001100", "00011000",                 -- $3096
+"00100000", "00000100",                 -- $8196
 "00001000",                             -- STA absolut
 "00001011", "10111001",                 -- $3001
 -- Räkna ut adress 418
@@ -419,7 +419,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001011", "10111011",                 -- $3003
 -- Hantera klick 428
 "00000000",                             -- LDA absolut
-"00001100", "00010111",                 -- klick #3095
+"00100000", "00000010",                 -- klick $8194
 "00001000",                             -- STA absolut
 "00001011", "10111010",                 -- $3002
 "11010100",                             -- AND omedelbar
@@ -535,7 +535,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "01000000",                             -- #64
 -- Hoppa ur om cellen är flaggad 550
 "10010011",                             -- JMPZ 
-"00000000", "00101011",                 -- #43
+"00000000", "00001001",                 -- #9
 -- Hämta cellen igen
 "00000001",                             -- LDA indirekt
 "00001011", "10111010",                 -- $3002

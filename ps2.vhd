@@ -10,7 +10,11 @@ entity ps2 is
     ja : inout std_logic_vector(0 to 7);
     led : out std_logic_vector(0 to 7);
     x_position   : out std_logic_vector(9 downto 0);
-    y_position   : out std_logic_vector(9 downto 0));  
+    y_position   : out std_logic_vector(9 downto 0);
+    click : out std_logic_vector(7 downto 0);
+    x_tile_pos : out std_logic_vector(7 downto 0);
+    y_tile_pos : out std_logic_vector(7 downto 0);
+    read : in std_logic);  
   
 end ps2;
     
@@ -64,13 +68,14 @@ architecture ps2_behv of ps2 is
   signal mouse_data_packet : std_logic_vector(32 downto 0) := "000000000000000000000000000000000";
   signal mouse_data_counter : std_logic_vector(5 downto 0) := "000000";
 
-  signal data_read  : std_logic_vector(1 downto 0) := "01";
-  signal click : std_logic_vector(7 downto 0) := "00000000";
   signal half_second_counter : std_logic_vector(31 downto 0);
   signal xpos : std_logic_vector(9 downto 0) := "0000000000";
   signal ypos : std_logic_vector(9 downto 0) := "0000000000";
   signal xvel : std_logic_vector(9 downto 0) := "0000000000";
-  signal yvel : std_logic_vector(9 downto 0) := "0000000000";  
+  signal yvel : std_logic_vector(9 downto 0) := "0000000000";
+  signal x_tile_temp : std_logic_vector(9 downto 0) := "1111111111";
+  signal y_tile_temp : std_logic_vector(9 downto 0) := "1111111111";  
+  signal data_read : std_logic := '0';
   
 begin
 
@@ -102,10 +107,8 @@ begin
 
   led(0) <= data_in;
   led(1) <= clk_in;
-  led(6) <= click(7);
-  led(7) <= click(0);
-  --led(6) <= mouse_data_packet(1);
-  --led(7) <= mouse_data_packet(2);
+  led(6) <= mouse_data_packet(1);
+  led(7) <= read;
   
   
   -- State machine.
@@ -122,6 +125,10 @@ begin
   process(clk)
   begin
     if rising_edge(clk) then
+      if read = '1' then
+        data_read <= '1';
+      end if;
+      
       if rst = '1' then
         state <= init;
         xpos <= (others => '0');
@@ -134,7 +141,7 @@ begin
         clk_enable <= '0';
         data_enable <= '0';
 
-        data_read <= "01";
+        data_read <= '0';
         click <= (others => '0');
         mouse_data_packet <= (others => '0');
         half_second_counter <= (others => '0');
@@ -227,15 +234,22 @@ begin
         clk_enable <= '0';
         data_enable <= '0';
 
-        if data_read = "00" then
-          data_read <= "01";
-        elsif data_read = "01" then
-          click <= mouse_data_packet(1) & "000000" & mouse_data_packet(2);
-          data_read <= "10";
+        if data_read = '1' then
+          if (xpos >= "0011000000" and xpos <= "0111000000" and
+              ypos >= "0001110000" and ypos <= "0101110000") then
+            if mouse_data_packet(1) = '1' and mouse_data_packet(2) = '1' then
+              click <= mouse_data_packet(1) & "0000000";
+            else
+              click <= mouse_data_packet(1) & "000000" & mouse_data_packet(2);            
+            end if;
+          else
+            click <= "00000000";
+          end if;
+          data_read <= '0';
         else
-          data_read <= "10";
+          click <= "00000000";
         end if;
-
+                                                                
         xvel <= (mouse_data_packet(5) & mouse_data_packet(5) & mouse_data_packet(19 downto 12));
         yvel <= (mouse_data_packet(6) &  mouse_data_packet(6) & mouse_data_packet(30 downto 23));
 
@@ -288,8 +302,15 @@ begin
     end if;
   end process;
 
-
   x_position <= xpos;
   y_position <= ypos;
+
+  x_tile_temp <= (xpos - "0011000000") when xpos >= "0011000000" and xpos <= "0111000000" else "1111111111";
+
+  x_tile_pos <= "0000" & x_tile_temp(7 downto 4);
+
+  y_tile_temp <= (ypos - "0001110000") when ypos >= "0001110000" and ypos <= "0101110000" else "1111111111";
+
+  y_tile_pos <= "0000" & y_tile_temp(7 downto 4);
 
 end ps2_behv;

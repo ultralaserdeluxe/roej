@@ -89,7 +89,12 @@ begin
 
   display_sprite <= '1' when display_x = '1' and display_y = '1' else '0';
 
-  sprite_rgb <= spritemem(conv_integer(sprite_y_cnt) * 16 + conv_integer(sprite_x_cnt));
+  process(clk)
+  begin
+    if rising_edge(clk) then
+      sprite_rgb <= spritemem(conv_integer(sprite_y_cnt) * 16 + conv_integer(sprite_x_cnt));      
+    end if;
+  end process;
 
   rgb_out <= sprite_rgb when display_sprite = '1' and sprite_rgb /= "11111111" else rgb_in;
   

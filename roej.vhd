@@ -83,7 +83,11 @@ ARCHITECTURE behavior OF roej IS
       ja : inout std_logic_vector(0 to 7);
       led : out std_logic_vector(0 to 7);
       x_position   : out std_logic_vector(9 downto 0);
-      y_position   : out std_logic_vector(9 downto 0));
+      y_position   : out std_logic_vector(9 downto 0);
+      click : out std_logic_vector(7 downto 0);
+      x_tile_pos : out std_logic_vector(7 downto 0);
+      y_tile_pos : out std_logic_vector(7 downto 0);
+      read : in std_logic);
   end component;
 
   
@@ -109,6 +113,11 @@ ARCHITECTURE behavior OF roej IS
   signal hundred_value : std_logic_vector(7 downto 0);
 
   signal vsync_connect : std_logic;
+
+  signal click  : std_logic_vector(7 downto 0);
+  signal x_tile_pos  : std_logic_vector(7 downto 0);
+  signal y_tile_pos  : std_logic_vector(7 downto 0);
+  signal read_ps2  : std_logic := '0';
 
 BEGIN
 
@@ -171,10 +180,20 @@ BEGIN
       ja => ja,
       led => led,
       x_position => sprite_x_pos,
-      y_position => sprite_y_pos);
+      y_position => sprite_y_pos,
+      click => click,
+      x_tile_pos => x_tile_pos,
+      y_tile_pos => y_tile_pos,
+      read => read_ps2);
+
+  read_ps2 <= '1' when read_signal_connect = '1' and conv_integer(adr_bus_connect) = 8194 else
+              '0';
     
   data_bus_in_connect <= memory_connect when conv_integer(adr_bus_connect) <= 4095 else
                          prng_value when conv_integer(adr_bus_connect) = 8193 else
+                         click when conv_integer(adr_bus_connect) = 8194 else
+                         x_tile_pos when conv_integer(adr_bus_connect) = 8195 else
+                         y_tile_pos when conv_integer(adr_bus_connect) = 8196 else 
                          single_value when conv_integer(adr_bus_connect) = 8198 else
                          ten_value when conv_integer(adr_bus_connect) = 8199 else
                          hundred_value when conv_integer(adr_bus_connect) = 8200 else
