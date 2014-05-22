@@ -13,7 +13,9 @@ ENTITY roej IS
     vgaGreen : out std_logic_vector(2 downto 0);
     vgaBlue : out std_logic_vector(2 downto 1);
     Hsync : out std_logic;
-    Vsync : out std_logic);
+    Vsync : out std_logic;
+    ja : inout std_logic_vector(0 to 7);
+    led : out std_logic_vector(0 to 7));
   
 END roej;
 
@@ -73,6 +75,16 @@ ARCHITECTURE behavior OF roej IS
     ten_out : out std_logic_vector(7 downto 0);
     hundred_out : out std_logic_vector(7 downto 0));
   end component;
+
+  component ps2
+    port(
+      clk : in std_logic;
+      rst : in std_logic;
+      ja : inout std_logic_vector(0 to 7);
+      led : out std_logic_vector(0 to 7);
+      x_position   : out std_logic_vector(9 downto 0));
+  end component;
+
   
   signal adr_bus_connect : std_logic_vector(adr_buswidth-1 downto 0);
   signal data_bus_out_connect : std_logic_vector(7 downto 0);
@@ -150,6 +162,14 @@ BEGIN
       single_out => single_value,
       ten_out => ten_value,
       hundred_out => hundred_value);
+
+  mouse_controller : ps2
+    port map(
+      clk => clk,
+      rst => rst,
+      ja => ja,
+      led => led,
+      x_position => sprite_x_pos);
     
   data_bus_in_connect <= memory_connect when conv_integer(adr_bus_connect) <= 4095 else
                          prng_value when conv_integer(adr_bus_connect) = 8193 else
