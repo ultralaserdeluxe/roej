@@ -9,7 +9,8 @@ entity ps2 is
     rst : in std_logic;
     ja : inout std_logic_vector(0 to 7);
     led : out std_logic_vector(0 to 7);
-    x_position   : out std_logic_vector(9 downto 0));
+    x_position   : out std_logic_vector(9 downto 0);
+    y_position   : out std_logic_vector(9 downto 0));  
   
 end ps2;
     
@@ -67,6 +68,9 @@ architecture ps2_behv of ps2 is
   signal click : std_logic_vector(7 downto 0) := "00000000";
   signal half_second_counter : std_logic_vector(31 downto 0);
   signal xpos : std_logic_vector(9 downto 0) := "0000000000";
+  signal ypos : std_logic_vector(9 downto 0) := "0000000000";
+  signal xvel : std_logic_vector(9 downto 0) := "0000000000";
+  signal yvel : std_logic_vector(9 downto 0) := "0000000000";  
   
 begin
 
@@ -120,6 +124,8 @@ begin
     if rising_edge(clk) then
       if rst = '1' then
         state <= init;
+        xpos <= (others => '0');
+        ypos <= (others => '0');                
       end if;
       
       if state = init then
@@ -132,6 +138,7 @@ begin
         click <= (others => '0');
         mouse_data_packet <= (others => '0');
         half_second_counter <= (others => '0');
+        mouse_data_counter <= (others => '0');
 
         delay_enable <= '1';
         delay_reset <= '0';
@@ -229,7 +236,29 @@ begin
           data_read <= "10";
         end if;
 
-        xpos <= xpos + mouse_data_packet(5);
+        xvel <= (mouse_data_packet(5) & mouse_data_packet(5) & mouse_data_packet(19 downto 12));
+        yvel <= (mouse_data_packet(6) &  mouse_data_packet(6) & mouse_data_packet(30 downto 23));
+
+        if xpos + xvel > "1001111111"  then
+          if xvel(9) = '1' then
+            xpos <= (others => '0');
+          else
+            xpos <= "1001111111";
+          end if;
+        else
+          xpos <= xpos + xvel;
+        end if;
+
+        if ypos - yvel > "0111011111"  then
+          if yvel(9) = '1' then
+            ypos <= "0111011111";
+          else
+            ypos <= (others => '0');
+          end if;
+        else
+          ypos <= ypos - yvel;
+        end if;        
+        
         mouse_data_packet <= (others => '0');
 
         state <= wait_clk_high_2;
@@ -261,5 +290,6 @@ begin
 
 
   x_position <= xpos;
+  y_position <= ypos;
 
 end ps2_behv;

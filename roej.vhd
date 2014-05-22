@@ -82,7 +82,8 @@ ARCHITECTURE behavior OF roej IS
       rst : in std_logic;
       ja : inout std_logic_vector(0 to 7);
       led : out std_logic_vector(0 to 7);
-      x_position   : out std_logic_vector(9 downto 0));
+      x_position   : out std_logic_vector(9 downto 0);
+      y_position   : out std_logic_vector(9 downto 0));
   end component;
 
   
@@ -169,7 +170,8 @@ BEGIN
       rst => rst,
       ja => ja,
       led => led,
-      x_position => sprite_x_pos);
+      x_position => sprite_x_pos,
+      y_position => sprite_y_pos);
     
   data_bus_in_connect <= memory_connect when conv_integer(adr_bus_connect) <= 4095 else
                          prng_value when conv_integer(adr_bus_connect) = 8193 else
