@@ -146,6 +146,7 @@ begin
         mouse_data_packet <= (others => '0');
         half_second_counter <= (others => '0');
         mouse_data_counter <= (others => '0');
+        bit_counter <= (others => '0');
 
         delay_enable <= '1';
         delay_reset <= '0';
