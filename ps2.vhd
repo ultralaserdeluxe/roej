@@ -251,7 +251,7 @@ begin
         end if;
                                                                 
         xvel <= (mouse_data_packet(5) & mouse_data_packet(5) & mouse_data_packet(19 downto 12));
-        yvel <= (mouse_data_packet(6) &  mouse_data_packet(6) & mouse_data_packet(30 downto 23));
+        yvel <= (mouse_data_packet(6) & mouse_data_packet(6) & mouse_data_packet(30 downto 23));
 
         if xpos + xvel > "1001111111"  then
           if xvel(9) = '1' then
@@ -297,8 +297,10 @@ begin
             state <= wait_clk_high_2;
           end if;
         end if;
-
       end if;
+
+      
+      
     end if;
   end process;
 

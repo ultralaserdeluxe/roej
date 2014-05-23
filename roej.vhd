@@ -114,10 +114,10 @@ ARCHITECTURE behavior OF roej IS
 
   signal vsync_connect : std_logic;
 
+  signal read_ps2  : std_logic := '0';
   signal click  : std_logic_vector(7 downto 0);
   signal x_tile_pos  : std_logic_vector(7 downto 0);
   signal y_tile_pos  : std_logic_vector(7 downto 0);
-  signal read_ps2  : std_logic := '0';
 
 BEGIN
 
@@ -188,7 +188,7 @@ BEGIN
 
   read_ps2 <= '1' when read_signal_connect = '1' and conv_integer(adr_bus_connect) = 8194 else
               '0';
-    
+
   data_bus_in_connect <= memory_connect when conv_integer(adr_bus_connect) <= 4095 else
                          prng_value when conv_integer(adr_bus_connect) = 8193 else
                          click when conv_integer(adr_bus_connect) = 8194 else
