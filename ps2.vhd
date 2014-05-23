@@ -273,7 +273,23 @@ begin
         else
           ypos <= ypos - yvel;
         end if;        
-        
+
+  --x_tile_temp <= (xpos - "0011000000") when xpos > "0011000000" and xpos < "0111000000" else "1111111111";
+
+        x_tile_pos <= "0000" & x_tile_temp(7 downto 4);
+
+  --y_tile_temp <= (ypos - "0001110000") when ypos > "0001110000" and ypos < "0101110000" else "1111111111";
+
+  y_tile_pos <= "0000" & y_tile_temp(7 downto 4);
+
+        if xpos >= "0011000000" and xpos < "0111000000" then
+          x_tile_temp <= (xpos - "0011000000");
+        end if;
+
+        if ypos >= "0001110000" and ypos < "0101110000" then
+          y_tile_temp <= (ypos - "0001110000");
+        end if;
+
         mouse_data_packet <= (others => '0');
 
         state <= wait_clk_high_2;
@@ -308,12 +324,12 @@ begin
   x_position <= xpos;
   y_position <= ypos;
 
-  x_tile_temp <= (xpos - "0011000000") when xpos >= "0011000000" and xpos <= "0111000000" else "1111111111";
+  --x_tile_temp <= (xpos - "0011000000") when xpos > "0011000000" and xpos < "0111000000" else "1111111111";
 
-  x_tile_pos <= "0000" & x_tile_temp(7 downto 4);
+  --x_tile_pos <= "0000" & x_tile_temp(7 downto 4);
 
-  y_tile_temp <= (ypos - "0001110000") when ypos >= "0001110000" and ypos <= "0101110000" else "1111111111";
+  --y_tile_temp <= (ypos - "0001110000") when ypos > "0001110000" and ypos < "0101110000" else "1111111111";
 
-  y_tile_pos <= "0000" & y_tile_temp(7 downto 4);
+  --y_tile_pos <= "0000" & y_tile_temp(7 downto 4);
 
 end ps2_behv;
