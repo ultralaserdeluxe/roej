@@ -34,8 +34,6 @@ begin
             "11110010" when k1_in = "10101" else  -- XOR
             "10100001" when k1_in = "10110" else  -- LSR
             "10100011" when k1_in = "10111" else  -- LSL
-            --"10100101" when k1_in = "11000" else  -- ASR
-            --"10101010" when k1_in = "11001" else  -- ASL
             "10101111" when k1_in = "11010" else  -- ANDA
             "10110100" when k1_in = "11011" else  -- CMP
             "10111001" when k1_in = "11100" else  -- LDA16OMEDELBAR
