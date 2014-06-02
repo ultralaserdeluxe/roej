@@ -67,7 +67,6 @@ architecture cpu_ar of cpu is
       ar_in: in std_logic_vector(buswidth-1 downto 0);       		-- input from ar
       ar_out : buffer std_logic_vector(buswidth-1 downto 0);    	-- signal to ar
       alu_logic : in std_logic_vector(4 downto 0));				-- operation logic
-      --statusreg_out : out std_logic_vector(7 downto 0)); -- message vector
   end component;   
   signal mm_27 : std_logic_vector(buswidth-1 downto 0); 						-- ALU-input
   signal alu_logic_signal : std_logic_vector(4 downto 0); 			-- ALU-logic
