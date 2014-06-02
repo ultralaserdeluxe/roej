@@ -17,7 +17,7 @@ architecture primmem_behv of primmem is
 
 type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
   signal primmem : primmem_type := (
--- Sätt stackpekare. 0
+-- Sï¿½tt stackpekare. 0
     
 "01010100",-- 0:                             -- LDS omedelbar
 "00001111",-- 1:
@@ -62,7 +62,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 
 "00110100",-- 27:                             -- LDX omedelbar
 "00101000",-- 28:                             -- #40
--- Hämta slumptal.
+-- Hï¿½mta slumptal.
 "00000000",-- 29:                             -- LDA abs
 "00100000",                             -- 30:
 "00000001",-- 31:                 -- $8193
@@ -83,11 +83,11 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10111101",-- 43:                             -- LSL
 "10111101",-- 44:                             -- LSL
 "10111101",-- 45:                             -- LSL
--- Lägg ihop x och y-offset. 61
+-- Lï¿½gg ihop x och y-offset. 61
 "00010000",-- 46:                             -- ADD absolut
 "00001011",                             -- 47:
 "10111000",-- 48:                 -- $3000
--- Lägg till konstant (pekare in i spelplansdatastrukturen).
+-- Lï¿½gg till konstant (pekare in i spelplansdatastrukturen).
 "11110100",-- 49:                             -- ADD16 omedelbar
 "00001100",                             -- 50:
 "00011100",-- 51:                 -- #3100
@@ -95,14 +95,14 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "11101000",-- 52:                             -- STA16 absolut
 "00001011",                             -- 53:
 "10111001",-- 54:                 -- $3001
--- Ladda A med värdet för en osynlig mina.
+-- Ladda A med vï¿½rdet fï¿½r en osynlig mina.
 "00000100",-- 55:                             -- LDA omedelbar
 "01001011",-- 56:                             -- #11
--- Kolla om en mina redan ligger på den platsen.
+-- Kolla om en mina redan ligger pï¿½ den platsen.
 "11011001",-- 57:                             -- CMP indirekt
 "00001011",                             -- 58:
 "10111001",-- 59:                 -- $3001
--- Börja om isf. 75
+-- Bï¿½rja om isf. 75
 "10010011",-- 60:                             -- JMPZ relativ
 "11111111",                             -- 61:
 "11011111",-- 62:                 -- #-33
@@ -110,7 +110,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001001",-- 63:                             -- STA indirekt
 "00001011",                             -- 64:
 "10111001",-- 65:                 -- $3001
--- Räkna ner och börja om. 81
+-- Rï¿½kna ner och bï¿½rja om. 81
 "01001101",-- 66:                             -- DEX
 "10010011",-- 67:                             -- JMPZ
 "00000000",                             -- 68:
@@ -140,10 +140,10 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10001011",-- 87:                             -- JMPN SLUT
 "00000000",                             -- 88:
 "01110100",                             -- 89:
-"10000011",-- 90:                             -- JMP början
+"10000011",-- 90:                             -- JMP bï¿½rjan
 "11111111",                             -- 91:
 "11110000",                             -- 92:
--- Initiera y- och x-tillägg. 108
+-- Initiera y- och x-tillï¿½gg. 108
 "11100100",-- 93:                             -- LDA16
 "11111111",                             -- 94:
 "11110000",-- 95:                 -- -16
@@ -227,7 +227,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001001",-- 171:                             -- STA
 "00001011",                             -- 172:
 "10111111",-- 173:                 -- $3007
---nästa x 189
+--nï¿½sta x 189
 "11111000",-- 174:                             -- LDA16ABSOLUT
 "00001011",                             -- 175:
 "10111010",-- 176:                 -- $3002
@@ -237,13 +237,13 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10111010",-- 180:                 -- $3002
 "11011100",-- 181:                             -- CMP
 "00000010",-- 182:                             -- #2
-"10010011",-- 183:                             -- JMPZ nästa y
+"10010011",-- 183:                             -- JMPZ nï¿½sta y
 "00000000",                             -- 184:
 "00000100",-- 185:                 -- 4
 "10000011",-- 186:                             -- JMP x_bound
 "11111111",                             -- 187:
 "11000101",-- 188:                 -- -59
---nästa y 204
+--nï¿½sta y 204
 "11111000",-- 189:                             -- LDA16ABSOLUT
 "00001011",                             -- 190:
 "10111000",-- 191:                 -- $3000
@@ -283,7 +283,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 
 -- Rita spelplan. 235
 
--- Vänta på VSYNC.
+-- Vï¿½nta pï¿½ VSYNC.
 "00000000",-- 220:                             -- LDA absolut
 "00100000",                             -- 221:
 "00001001",-- 222:                 -- $8201
@@ -292,7 +292,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10010011",-- 225:                             -- JMPZ relativ
 "11111111",                             -- 226:
 "11111001",-- 227:                 -- #-7
--- Ladda indexräknaren.
+-- Ladda indexrï¿½knaren.
 "00110100",-- 228:                             -- LDX omedelbar
 "11111111",-- 229:                             -- #255
 "00111000",-- 230:                             -- STX absolut
@@ -313,12 +313,12 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10111000",-- 243:                 -- $3000
 "11010100",-- 244:                             -- AND omedelbar
 "11110000",-- 245:                             -- #240
-"10111101",-- 246:                             -- LSL underförstådd
-"10111101",-- 247:                             -- LSL underförstådd
+"10111101",-- 246:                             -- LSL underfï¿½rstï¿½dd
+"10111101",-- 247:                             -- LSL underfï¿½rstï¿½dd
 "00010000",-- 248:                             -- ADD absolut
 "00001011",                             -- 249:
 "10111001",-- 250:                 -- $3001
--- Lägg till konstant till adressen.
+-- Lï¿½gg till konstant till adressen.
 "11110100",-- 251:                             -- ADD16 omedelbar
 "00010001",           --600                  -- 252:
 "11001100",-- 253:                 -- #4096
@@ -351,7 +351,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001001",-- 276:                             -- STA indirekt
 "00001011",                             -- 277:
 "10111010",-- 278:                 -- $3002
-"01001101",-- 279:                             -- DEX underförstådd
+"01001101",-- 279:                             -- DEX underfï¿½rstï¿½dd
 "10001011",-- 280:                             -- JMPN relativ
 "00000000",                             -- 281:
 "00011100",-- 282:                 -- #28
@@ -364,7 +364,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001001",-- 288:                             -- STA indirekt
 "00001011",                             -- 289:
 "10111010",-- 290:                 -- $3002
-"01001101",-- 291:                             -- DEX underförstådd
+"01001101",-- 291:                             -- DEX underfï¿½rstï¿½dd
 "10001011",-- 292:                             -- JMPN relativ
 "00000000",                             -- 293:
 "00010000",-- 294:                 -- #16
@@ -377,7 +377,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001001",-- 300:                             -- STA indirekt
 "00001011",                             -- 301:
 "10111010",-- 302:                 -- $3002
-"01001101",-- 303:                             -- DEX underförstådd
+"01001101",-- 303:                             -- DEX underfï¿½rstï¿½dd
 "10001011",-- 304:                             -- JMPN relativ
 "00000000",                             -- 305:
 "00000100",                             -- 306:
@@ -387,7 +387,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10100101",-- 310:                             -- RTS
 
 
--- 101 från hopp i mainanrop
+-- 101 frï¿½n hopp i mainanrop
 -- Rita statusrad. 326
 
 "00000000",-- 311:                             -- LDA
@@ -418,13 +418,13 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001010",-- 336:                             -- #10
 "00001000",-- 337:                             -- STA
 "00001011",                             -- 338:
-"11101010",-- 339:                 -- $3050 -- nämnare
+"11101010",-- 339:                 -- $3050 -- nï¿½mnare
 "00000000",-- 340:                             -- LDA
 "00001100",                             -- 341:
 "00011011",-- 342:                 -- $3099
 "00001000",-- 343:                             -- STA
 "00001011",                             -- 344:
-"11101011",-- 345:                 -- $3051 -- täljare
+"11101011",-- 345:                 -- $3051 -- tï¿½ljare
 "10011011",-- 346:                             -- JSR division
 "00000001",                             -- 347:
 "11111010",-- 348:                 -- #18
@@ -447,7 +447,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10100101",-- 365:                             -- RTS
 
 
--- 155 från main-funktionen
+-- 155 frï¿½n main-funktionen
 -- Division 381
 "00000110",
 "00000110",
@@ -492,7 +492,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001000",-- 400:                             -- STA absolut
 "00001011",                             -- 401:
 "10111001",-- 402:                 -- $3001
--- Räkna ut adress 418
+-- Rï¿½kna ut adress 418
 "01011101",-- 403:                             -- LSLx4
 "00010000",-- 404:                             -- ADD absolut
 "00001011",                             -- 405:
@@ -512,29 +512,29 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10111010",-- 418:                 -- $3002
 "11010100",-- 419:                             -- AND omedelbar
 "10000000",-- 420:                             -- #128
-"10010011",-- 421:                             -- JMPZ hoppa till högerklick-hantering
+"10010011",-- 421:                             -- JMPZ hoppa till hï¿½gerklick-hantering
 "00000000",                             -- 422:
 "00101100",-- 423:                 -- 44
--- Kolla om cellen är synlig 439
+-- Kolla om cellen ï¿½r synlig 439
 "00000001",-- 424:                             -- LDA indirekt
 "00001011",                             -- 425:
 "10111011",-- 426:                 -- $3003
 "11010100",-- 427:                             -- AND omedelbar
 "10000000",-- 428:                             -- #128 
-"10010011",-- 429:                             -- JMPZ hoppa över rts
+"10010011",-- 429:                             -- JMPZ hoppa ï¿½ver rts
 "00000000",                             -- 430:
 "00000010",-- 431:                 -- #2
-"10100101",-- 432:                             -- RTS (gå ur)
--- Kolla om cellen är flaggad 448
+"10100101",-- 432:                             -- RTS (gï¿½ ur)
+-- Kolla om cellen ï¿½r flaggad 448
 "00000001",-- 433:                             -- LDA indirekt
 "00001011",                             -- 434:
 "10111011",-- 435:                 -- $3003
 "11010100",-- 436:                             -- AND omedelbar
 "01000000",-- 437:                             -- #64
-"10010011",-- 438:                             -- JMPZ gå ur
+"10010011",-- 438:                             -- JMPZ gï¿½ ur
 "11111111",                             -- 439:
 "11111000",-- 440:                 -- #-8
--- Kolla om cellen är en mina 456
+-- Kolla om cellen ï¿½r en mina 456
 "00000001",-- 441:                             -- LDA indirekt
 "00001011",                             -- 442:
 "10111011",-- 443:                 -- $3003
@@ -545,7 +545,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "01110100",-- 448:                 -- #46+51
 "00110100",-- 449:                             -- LDX omedelbar
 "00000000",-- 450:                             -- #0
--- Cellen är tom eller numrerad, starta flood-fill 466
+-- Cellen ï¿½r tom eller numrerad, starta flood-fill 466
 "00000000",-- 451:                             -- LDA absolut
 "00001011",            --400                 -- 452:
 "10111000",-- 453:                 -- $3000 x-pos
@@ -562,17 +562,17 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00000000",                             -- 464:
 "01101001",-- 465:                 -- #32+3+51
 "10100101",-- 466:                             -- RTS
--- Högerklick 482
--- Kolla om högerklick
+-- Hï¿½gerklick 482
+-- Kolla om hï¿½gerklick
 "00000000",-- 467:                             -- LDA absolut
 "00001011",                             -- 468:
 "10111010",-- 469:                 -- $3002 klick-info
 "11010100",-- 470:                             -- AND omedelbar
-"00000001",-- 471:                             -- #1 högerklick
+"00000001",-- 471:                             -- #1 hï¿½gerklick
 "10010011",-- 472:                             -- JMPZ hoppa tll rts
 "11111111",                             -- 473:
 "11111000",-- 474:                 -- #-8
--- NYTT SKIT Kolla om det gått en sekund sen sista högerklicket
+-- Kolla om det gï¿½tt en sekund sen sista hï¿½gerklicket
 -- Kolla sekund
 "00000000",-- 475:                             -- LDA absolut
 "00100000",                             -- 476:
@@ -583,7 +583,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10010011",-- 481:                             -- JMPZ tiotal
 "00000000",                             -- 482:
 "00000100",-- 483:                  -- #4
-"10000011",-- 484:                             -- JMP fortsätt
+"10000011",-- 484:                             -- JMP fortsï¿½tt
 "00000000",                             -- 485:
 "00010110",-- 486:                  -- #22
 -- Kolla tiotals sekunder 13
@@ -596,7 +596,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10010011",-- 493:                             -- JMPZ hundratal
 "00000000",                             -- 494:
 "00000100",-- 495:                  -- #4
-"10000011",-- 496:                             -- JMP fortsätt
+"10000011",-- 496:                             -- JMP fortsï¿½tt
 "00000000",                             -- 497:
 "00001010",-- 498:                  -- #10
 -- Kolla hundratals sekunder 25
@@ -609,7 +609,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10010011",-- 505:                             -- JMPZ avsluta
 "00000000",                             -- 506:
 "00011011",-- 507:                  -- #28
--- Spara ny tid för senaste högerklick 34
+-- Spara ny tid fï¿½r senaste hï¿½gerklick 34
 "00000000",-- 508:                             -- LDA absolut
 "00100000",                             -- 509:
 "00000110",-- 510:                  -- $8198
@@ -628,21 +628,21 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001000",-- 523:                             -- STA absolut
 "00001100",                             -- 524:
 "00001000",-- 525:                  -- $3080
--- SLUT NYTT SKIT 51 lång
--- Kolla om cellen är synlig 490 + 51
+-- 51 lï¿½ng
+-- Kolla om cellen ï¿½r synlig 490 + 51
 "00000001",-- 526:                             -- LDA indirekt
 "00001011",                             -- 527:
 "10111011",-- 528:                 -- $3003 spelplanscell
 "11010100",-- 529:                             -- AND omedelbar
 "10000000",-- 530:                             -- #128 en rad borttagen
-"10010011",-- 531:                             -- JMPZ hoppa över rts
+"10010011",-- 531:                             -- JMPZ hoppa ï¿½ver rts
 "00000000",                             -- 532:
 "00000010",-- 533:                 -- #2
 "10100101",-- 534:                             -- RTS
--- Cellen är osynlig, toggla flagga 500 --
+-- Cellen ï¿½r osynlig, toggla flagga 500 --
 "00000001",-- 535:                             -- LDA indirekt
 "00001011",                             -- 536:
-"10111011",-- 537:                 -- 3003 spelplanscell (värdet förstört
+"10111011",-- 537:                 -- 3003 spelplanscell (vï¿½rdet fï¿½rstï¿½rt
                                         -- av and) 3 nya rader
 "10101100",-- 538:                             -- XOR omedelbar
 "01000000",-- 539:                             -- #64 toggla flagga
@@ -651,7 +651,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10111011",-- 542:                 -- $3003 spelplanscell
 "11010100",-- 543:                             -- AND omedelbar
 "01000000",-- 544:                             -- #64
-"10010011",-- 545:                             -- JMPZ sänk flaggräknaren
+"10010011",-- 545:                             -- JMPZ sï¿½nk flaggrï¿½knaren
 "00000000",                             -- 546:
 "00001001",-- 547:                 -- #9
 "00000000",-- 548:                             -- LDA absolut
@@ -670,7 +670,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001100",                             -- 561:
 "00011011",-- 562:                 -- $3099
 "10100101",-- 563:                             -- RTS
--- End-game, sätt end-game flagga i minnet
+-- End-game, sï¿½tt end-game flagga i minnet
 "00000100",-- 564:                             -- LDA omedelbar
 "00000001",-- 565:                             -- #1 
 "00001000",-- 566:                             -- STA absolut
@@ -680,11 +680,11 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 
 
 -- Flood fill 515
--- Hämta ypos
+-- Hï¿½mta ypos
 "00000010",-- 570:                             -- LDA index
 "00000111",                             -- 571:
 "11010000",-- 572:                 -- $2000
--- Kolla om ypos är giltig
+-- Kolla om ypos ï¿½r giltig
 "11010100",-- 573:                             -- AND omedelbar
 "11110000",-- 574:                             -- #240
 "10010011",-- 575:                             -- JMPZ
@@ -692,11 +692,11 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00000010",-- 577:                 -- #2
 -- Hoppar ur rekursionen 523
 "10100101",-- 578:                             -- RTS
--- Hämta xpos
+-- Hï¿½mta xpos
 "00000010",-- 579:                             -- LDA index
 "00000111",                             -- 580:
 "11010001",-- 581:                 -- $2001
--- Kolla om xpos är giltig
+-- Kolla om xpos ï¿½r giltig
 "11010100",-- 582:                             -- AND omedelbar
 "11110000",-- 583:                             -- #240
 "10010011",-- 584:                             -- JMPZ
@@ -704,7 +704,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00000010",-- 586:                 -- #2
 -- Hoppa ur rekursionen 532
 "10100101",-- 587:                             -- RTS
--- Räkna ut adress
+-- Rï¿½kna ut adress
 "00000010",-- 588:                             -- LDA8 indexerad
 "00000111",                             -- 589:
 "11010000",-- 590:                 -- $2000
@@ -718,31 +718,31 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "11101000",-- 598:                             -- STA16 absolut
 "00001011",                             -- 599:
 "10111010",-- 600:                 -- $3002
--- Hämta cellen 546
+-- Hï¿½mta cellen 546
 "00000001",-- 601:                             -- LDA indirekt
 "00001011",                             -- 602:
 "10111010",-- 603:                 -- $3002
--- Kolla om cellen är flaggad
+-- Kolla om cellen ï¿½r flaggad
 "11010100",-- 604:                             -- AND
 "01000000",-- 605:                             -- #64
--- Hoppa ur om cellen är flaggad 550
+-- Hoppa ur om cellen ï¿½r flaggad 550
 "10010011",-- 606:                             -- JMPZ 
 "00000000",                             -- 607:
 "00001001",-- 608:                 -- #9
--- Hämta cellen igen
+-- Hï¿½mta cellen igen
 "00000001",-- 609:                             -- LDA indirekt
 "00001011",                             -- 610:
 "10111010",-- 611:                 -- $3002
--- Kolla om cellen är synlig
+-- Kolla om cellen ï¿½r synlig
 "11010100",-- 612:                             -- AND omedelbar
 "10000000",-- 613:                             -- #128
--- Hoppa till 'gör cellen synlig'
+-- Hoppa till 'gï¿½r cellen synlig'
 "10010011",-- 614:                             -- JMPZ
 "00000000",                             -- 615:
 "00000010",-- 616:                 -- #2
 -- Hoppa ur rekursionen 562
 "10100101",-- 617:     --401                        -- RTS
--- Gör cellen synlig
+-- Gï¿½r cellen synlig
 "00000001",-- 618:                             -- LDA indirekt
 "00001011",                             -- 619:
 "10111010",-- 620:                 -- $3002
@@ -751,7 +751,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001001",-- 623:                             -- STA indirekt
 "00001011",                             -- 624:
 "10111010",-- 625:                 -- $3002
--- Kolla om cellen är en nolla 571
+-- Kolla om cellen ï¿½r en nolla 571
 "11010100",-- 626:                             -- AND omedelbar
 "00001111",-- 627:                             -- #15
 -- Hoppa till rekursivt anrop
@@ -777,7 +777,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001010",-- 642:                             -- STA indexerad
 "00000111",                             -- 643:
 "11010010",-- 644:                 -- $2002
--- Öka indexeringen 590
+-- ï¿½ka indexeringen 590
 "01000101",-- 645:                             -- INX
 "01000101",-- 646:                             -- INX
 -- Starta om algoritm
@@ -786,7 +786,6 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10110001",-- 649:                 -- #-79
 "01001101",-- 650:                             -- DEX
 "01001101",-- 651:                             -- DEX
--- NYTT SKIT
 -- Nordost 597
 -- Spara ny xpos
 "00000010",-- 652:    200                         -- LDA indexerad
@@ -804,7 +803,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001010",-- 663:                             -- STA indexerad
 "00000111",                             -- 664:
 "11010010",-- 665:                 -- $2002
--- Öka indexeringen
+-- ï¿½ka indexeringen
 "01000101",-- 666:                             -- INX
 "01000101",-- 667:                             -- INX
 -- Starta om algoritm
@@ -829,7 +828,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001010",-- 683:                             -- STA indexerad
 "00000111",                             -- 684:
 "11010010",-- 685:                 -- $2002
--- Öka indexeringen
+-- ï¿½ka indexeringen
 "01000101",-- 686:                             -- INX
 "01000101",-- 687:                             -- INX
 -- Starta om algoritm
@@ -855,7 +854,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001010",-- 704:                             -- STA indexerad
 "00000111",                             -- 705:
 "11010010",-- 706:                 -- $2002
--- Öka indexeringen
+-- ï¿½ka indexeringen
 "01000101",-- 707:                             -- INX
 "01000101",-- 708:                             -- INX
 -- Starta om algoritm
@@ -880,7 +879,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001010",-- 724:                             -- STA indexerad
 "00000111",                             -- 725:
 "11010010",-- 726:                 -- $2002
--- Öka indexeringen
+-- ï¿½ka indexeringen
 "01000101",-- 727:                             -- INX
 "01000101",-- 728:                             -- INX
 -- Starta om algoritm 674
@@ -889,7 +888,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "01011111",-- 731:                 -- #-161
 "01001101",-- 732:                             -- DEX
 "01001101",-- 733:                             -- DEX
--- Sydväst 679
+-- Sydvï¿½st 679
 -- Spara ny xpos
 "00000010",-- 734:                             -- LDA indexerad
 "00000111",                             -- 735:
@@ -906,7 +905,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001010",-- 745:                             -- STA indexerad
 "00000111",                             -- 746:
 "11010010",-- 747:                 -- $2002
--- Öka indexeringen
+-- ï¿½ka indexeringen
 "01000101",-- 748:                             -- INX
 "01000101",-- 749:                             -- INX
 -- Starta om algoritm
@@ -915,7 +914,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "01001010",-- 752: 100                 -- #-182
 "01001101",-- 753:                             -- DEX
 "01001101",-- 754:                             -- DEX
--- Väst 700
+-- Vï¿½st 700
 -- Spara ny xpos
 "00000010",-- 755:                             -- LDA indexerad
 "00000111",                             -- 756:
@@ -931,7 +930,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001010",-- 765:                             -- STA indexerad
 "00000111",                             -- 766:
 "11010010",-- 767:                 -- $2002
--- Öka indexeringen
+-- ï¿½ka indexeringen
 "01000101",-- 768:                             -- INX
 "01000101",-- 769:                             -- INX
 -- Starta om algoritm
@@ -940,7 +939,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00110110",-- 772:                 -- #-202
 "01001101",-- 773:                             -- DEX
 "01001101",-- 774:                             -- DEX
--- Nordväst 720
+-- Nordvï¿½st 720
 -- Spara ny xpos
 "00000010",-- 775:                             -- LDA indexerad
 "00000111",                             -- 776:
@@ -957,7 +956,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00001010",-- 786:                             -- STA indexerad
 "00000111",                             -- 787:
 "11010010",-- 788:                 -- $2002
--- Öka indexeringen 734
+-- ï¿½ka indexeringen 734
 "01000101",-- 789:                             -- INX
 "01000101",-- 790:                             -- INX
 -- Starta om algoritm
@@ -966,12 +965,11 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00100001",-- 793:                 -- #-223
 "01001101",-- 794:                             -- DEX
 "01001101",-- 795:                             -- DEX
--- SLUT NYTT SKIT 741
 "10100101",-- 796:                             -- RTS
 
 
 -- End Game 742+51
--- Kolla om spelet är vunnet
+-- Kolla om spelet ï¿½r vunnet
 "00110100",                             -- LDX omedelbar
 "11111111",                             -- #255
 "00000010",                             -- LDA indexerad
@@ -1011,18 +1009,18 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "10100101",-- 805:                             -- RTS
 "00110100",-- 806:                             -- LDX omedelbar
 "11111111",-- 807:                             -- #255
--- Hämta spelcell
+-- Hï¿½mta spelcell
 "00000010",-- 808:                             -- LDA indexerad
 "00001100",                             -- 809:
 "00011100",-- 810:                 -- #3100
--- Gör cellen synlig
+-- Gï¿½r cellen synlig
 "11001100",-- 811:                             -- OR omedelbar
 "10000000",-- 812:                             -- #128
 -- Spara cellen
 "00001010",-- 813:                             -- STA indexerad
 "00001100",                             -- 814:
 "00011100",-- 815:                 -- #3100
--- Börja om
+-- Bï¿½rja om
 "01001101",-- 816:                             -- DEX
 "10001011",-- 817:                             -- JMPN relativ
 "00000000",                             -- 818:
@@ -1044,10 +1042,10 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00000000",-- 367:                             -- #0
 "00000000",-- 368:                             -- LDA
 "00001011",                             -- 369:
-"11101011",-- 370:                 -- $3051 -- täljare
+"11101011",-- 370:                 -- $3051 -- tï¿½ljare
 "00011000",-- 371:                             -- SUB
 "00001011",                             -- 372:
-"11101010",-- 373:                 -- $3050 -- nämnare
+"11101010",-- 373:                 -- $3050 -- nï¿½mnare
 "10001011",-- 374:                             -- JMPN
 "00000000",                             -- 375:
 "00000101",-- 376:                 -- 5
@@ -1058,7 +1056,7 @@ type primmem_type is array (0 to 4095) of std_logic_vector(7 downto 0);
 "00010000",                             -- 381:
                              -- ADD
 "00001011",                             -- 382:
-"11101010",-- 383:                 -- $3050 -- nämnare
+"11101010",-- 383:                 -- $3050 -- nï¿½mnare
 "00001000",-- 384:                             -- STA
 "00001011",                             -- 385:
 "11101101",-- 386:                 -- $3053 rest
