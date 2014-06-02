@@ -29,8 +29,6 @@ architecture sprite_behv of sprite is
       value  : out std_logic_vector(n - 1 downto 0));
   end component;
 
-  --signal sprite_x_pos : std_logic_vector(9 downto 0) := "0000000001";
-  --signal sprite_y_pos : std_logic_vector(9 downto 0) := "0000000001";
   signal sprite_x_cnt : std_logic_vector(3 downto 0);
   signal sprite_y_cnt : std_logic_vector(3 downto 0);
   signal display_x : std_logic := '0';
