@@ -50,7 +50,7 @@ architecture ps2_behv of ps2 is
 
   type state_type is (init, set_clock_low, set_data_low, release_clk,
                       wait_clk_low_1, send_bit, wait_clk_high, wait_clk_low_2,
-                      done, wait_clk_high_2, wait_clk_low_3, wait_half_second);
+                      done, wait_clk_low_3, wait_clk_high_3, wait_half_second);
   signal state : state_type := init;
 
   constant delay_500_us : std_logic_vector(15 downto 0) := "1100001101010000";
@@ -224,7 +224,7 @@ begin
       elsif state = wait_half_second then
         led(2 to 5) <= "1001";
         if half_second_counter = "00000101111101011110000100000000" then
-          state <= wait_clk_high_2;
+          state <= wait_clk_low_3;
         else
           half_second_counter <= half_second_counter + 1;
         end if;
@@ -274,13 +274,9 @@ begin
           ypos <= ypos - yvel;
         end if;        
 
-  --x_tile_temp <= (xpos - "0011000000") when xpos > "0011000000" and xpos < "0111000000" else "1111111111";
-
         x_tile_pos <= "0000" & x_tile_temp(7 downto 4);
 
-  --y_tile_temp <= (ypos - "0001110000") when ypos > "0001110000" and ypos < "0101110000" else "1111111111";
-
-  y_tile_pos <= "0000" & y_tile_temp(7 downto 4);
+        y_tile_pos <= "0000" & y_tile_temp(7 downto 4);
 
         if xpos >= "0011000000" and xpos < "0111000000" then
           x_tile_temp <= (xpos - "0011000000");
@@ -292,18 +288,18 @@ begin
 
         mouse_data_packet <= (others => '0');
 
-        state <= wait_clk_high_2;
+        state <= wait_clk_low_3;
 
-      elsif state = wait_clk_high_2 then
+      elsif state = wait_clk_low_3 then
         led(2 to 5) <= "0111";
 
         if clk_fall = '1' then
           mouse_data_packet <= data_sync_reg(3) & mouse_data_packet(32 downto 1);
           mouse_data_counter <= mouse_data_counter + 1;
-          state <= wait_clk_low_3;
+          state <= wait_clk_high_3;
         end if;
         
-      elsif state = wait_clk_low_3 then
+      elsif state = wait_clk_high_3 then
         led(2 to 5) <= "1000";
 
         if clk_rise = '1' then
@@ -311,7 +307,7 @@ begin
             state <= done;
             mouse_data_counter <= "000000";
           else
-            state <= wait_clk_high_2;
+            state <= wait_clk_low_3;
           end if;
         end if;
       end if;
@@ -323,13 +319,5 @@ begin
 
   x_position <= xpos;
   y_position <= ypos;
-
-  --x_tile_temp <= (xpos - "0011000000") when xpos > "0011000000" and xpos < "0111000000" else "1111111111";
-
-  --x_tile_pos <= "0000" & x_tile_temp(7 downto 4);
-
-  --y_tile_temp <= (ypos - "0001110000") when ypos > "0001110000" and ypos < "0101110000" else "1111111111";
-
-  --y_tile_pos <= "0000" & y_tile_temp(7 downto 4);
 
 end ps2_behv;
